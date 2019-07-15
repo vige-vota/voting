@@ -40,6 +40,6 @@ docker pull vige/vota-backend
 ```
 To run the image use the command:
 ```
-docker run -d --name vota-backend -p443:8443 vige/vota-backend
+docker run -d --name vota-backend -p8443:8443 vige/vota-backend
 ```
-Then open `https://localhost` to connect to the vote application
+Then open `https://localhost:8443/swagger-ui.html` to connect to the vote application
