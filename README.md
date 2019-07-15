@@ -36,10 +36,10 @@ To make the project as an Eclipse project go in the root folder of the project a
 
 If you need a complete environment you can download docker and import the application through the command:
 ```
-docker pull vige/vota
+docker pull vige/vota-backend
 ```
 To run the image use the command:
 ```
-docker run -d --name vota -p443:8443 vige/vota
+docker run -d --name vota-backend -p443:8443 vige/vota-backend
 ```
 Then open `https://localhost` to connect to the vote application

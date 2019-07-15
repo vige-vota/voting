@@ -30,7 +30,7 @@ COPY / /workspace/vota
 RUN sudo chown -R votinguser:votinguser /workspace
 RUN cd vota && ./gradlew build
 RUN rm -Rf /home/votinguser/.gradle && \
-	mv /workspace/vota/backend/build/libs/backend*.jar /workspace/vota.jar && \
+	mv /workspace/vota/build/libs/backend*.jar /workspace/vota.jar && \
 	rm -Rf /workspace/vota && \
 	mkdir /workspace/mongodb && \
 	echo "nohup /usr/bin/mongod --dbpath /workspace/mongodb &" > /workspace/start_mongo.sh && \
