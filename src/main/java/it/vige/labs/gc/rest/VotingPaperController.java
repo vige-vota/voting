@@ -28,6 +28,7 @@ public class VotingPaperController {
 			try {
 				VotingPapers votingPapersFromJson = objectMapper.readValue(jsonStream, VotingPapers.class);
 				votingPapers.setVotingPapers(votingPapersFromJson.getVotingPapers());
+				votingPapers.setAdmin(votingPapersFromJson.isAdmin());
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
