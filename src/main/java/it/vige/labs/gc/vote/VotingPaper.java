@@ -1,10 +1,14 @@
-package it.vige.labs.gc.domain;
+package it.vige.labs.gc.vote;
 
 public class VotingPaper extends Identifier {
 
 	private Party party;
 	
 	private Group group;
+
+	public VotingPaper() {
+		super();
+	}
 
 	public VotingPaper(int id, Party party) {
 		super(id);

@@ -1,8 +1,11 @@
-package it.vige.labs.gc.domain;
+package it.vige.labs.gc.vote;
 
 public class Identifier {
 
 	private int id;
+
+	public Identifier() {
+	}
 	
 	public Identifier(int id) {
 		this.id = id;

@@ -1,4 +1,4 @@
-package it.vige.labs.gc.domain;
+package it.vige.labs.gc.vote;
 
 import java.util.List;
 

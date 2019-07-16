@@ -1,18 +1,19 @@
-package it.vige.labs.gc.domain;
+package it.vige.labs.gc.votingpapers;
 
 import java.util.List;
 
 public class Party extends Identifier {
 
+	private String image;
+	
 	private List<Candidate> candidates;
 
-	public Party(int id) {
-		super(id);
+	public String getImage() {
+		return image;
 	}
 
-	public Party(int id, List<Candidate> candidates) {
-		this(id);
-		this.candidates = candidates;
+	public void setImage(String image) {
+		this.image = image;
 	}
 
 	public List<Candidate> getCandidates() {

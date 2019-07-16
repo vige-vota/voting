@@ -6,8 +6,10 @@ public class Messages {
 
 	private List<Message> messages;
 	
-	public Messages(List<Message> messages) {
-		super();
+	private boolean ok;
+	
+	public Messages(boolean ok, List<Message> messages) {
+		this.ok = ok;
 		this.messages = messages;
 	}
 
@@ -17,5 +19,13 @@ public class Messages {
 
 	public void setMessages(List<Message> messages) {
 		this.messages = messages;
+	}
+
+	public boolean isOk() {
+		return ok;
+	}
+
+	public void setOk(boolean ok) {
+		this.ok = ok;
 	}
 }

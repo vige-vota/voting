@@ -12,13 +12,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import it.vige.labs.gc.domain.Candidate;
-import it.vige.labs.gc.domain.Group;
-import it.vige.labs.gc.domain.Party;
-import it.vige.labs.gc.domain.Vote;
-import it.vige.labs.gc.domain.VotingPaper;
+import it.vige.labs.gc.rest.Validator;
 import it.vige.labs.gc.rest.VoteController;
 import it.vige.labs.gc.result.Messages;
+import it.vige.labs.gc.vote.Candidate;
+import it.vige.labs.gc.vote.Group;
+import it.vige.labs.gc.vote.Party;
+import it.vige.labs.gc.vote.Vote;
+import it.vige.labs.gc.vote.VotingPaper;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -55,8 +56,9 @@ public class VoteTest {
 
 		Vote vote = new Vote(Arrays.asList(new VotingPaper[] { comunali, regionali, nazionali, europee }));
 		Messages messages = voteController.vote(vote);
-		Assert.assertArrayEquals("the result is ok", VoteController.defaultMessage.getMessages().toArray(),
+		Assert.assertArrayEquals("the result is ok", Validator.defaultMessage.getMessages().toArray(),
 				messages.getMessages().toArray());
+		Assert.assertTrue(messages.isOk());
 	}
 
 }
