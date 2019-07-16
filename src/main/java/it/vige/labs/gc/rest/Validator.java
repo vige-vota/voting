@@ -5,7 +5,6 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
-import it.vige.labs.gc.JavaAppApplication;
 import it.vige.labs.gc.result.Message;
 import it.vige.labs.gc.result.Messages;
 import it.vige.labs.gc.result.Severity;
@@ -21,7 +20,7 @@ public class Validator {
 			Arrays.asList(new Message[] { new Message(Severity.message, ok, "all is ok") }));
 
 	public Messages validate(Vote vote) {
-		VotingPapers votingPapers = JavaAppApplication.getVotingPapers();
+		VotingPapers votingPapers = VotingPaperController.generateVotingPapers();
 		if (votingPapers.getVotingPapers().parallelStream()
 				.filter(e -> e.getId() == vote.getVotingPapers().get(0).getId()).collect(Collectors.toList())
 				.size() > 0)
