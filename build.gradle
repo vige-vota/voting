@@ -21,11 +21,16 @@ apply plugin: 'io.spring.dependency-management'
 apply plugin: 'com.sourcemuse.mongo'
 
 group = 'it.vige'
-version = '0.0.1-SNAPSHOT'
+version = '1.0.0-SNAPSHOT'
+
 sourceCompatibility = 12
 
 repositories {
     mavenCentral()
+}
+
+jar {
+    archiveName = 'bu.jar'
 }
 
 dependencies {
