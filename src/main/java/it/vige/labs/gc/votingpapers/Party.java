@@ -2,19 +2,14 @@ package it.vige.labs.gc.votingpapers;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import it.vige.labs.gc.vote.Identifier;
+
+@JsonIgnoreProperties("name,image")
 public class Party extends Identifier {
 
-	private String image;
-	
 	private List<Candidate> candidates;
-
-	public String getImage() {
-		return image;
-	}
-
-	public void setImage(String image) {
-		this.image = image;
-	}
 
 	public List<Candidate> getCandidates() {
 		return candidates;

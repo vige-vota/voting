@@ -2,13 +2,14 @@ package it.vige.labs.gc.votingpapers;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import it.vige.labs.gc.vote.Identifier;
+
+@JsonIgnoreProperties("name,cssStyle,color")
 public class VotingPaper extends Identifier {
     
     private int maxCandidates;
-    
-	private String color;
-	
-	private String cssStyle;
 	
 	private boolean disjointed;
 	
@@ -20,22 +21,6 @@ public class VotingPaper extends Identifier {
 
 	public void setMaxCandidates(int maxCandidates) {
 		this.maxCandidates = maxCandidates;
-	}
-
-	public String getColor() {
-		return color;
-	}
-
-	public void setColor(String color) {
-		this.color = color;
-	}
-
-	public String getCssStyle() {
-		return cssStyle;
-	}
-
-	public void setCssStyle(String cssStyle) {
-		this.cssStyle = cssStyle;
 	}
 
 	public boolean isDisjointed() {
