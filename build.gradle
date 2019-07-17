@@ -22,10 +22,18 @@ apply plugin: 'com.sourcemuse.mongo'
 
 group = 'it.vige'
 version = '1.0.0-SNAPSHOT'
+<<<<<<< HEAD
+=======
+
+>>>>>>> 9e52b2a9f1a85a23b5b2b268e0e516b9213a6f05
 sourceCompatibility = 12
 
 repositories {
     mavenCentral()
+}
+
+jar {
+    archiveName = 'bu.jar'
 }
 
 dependencies {
