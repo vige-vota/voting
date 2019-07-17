@@ -1,11 +1,7 @@
-<<<<<<< HEAD
 #backend
-=======
-#votingpaper
->>>>>>> 9e52b2a9f1a85a23b5b2b268e0e516b9213a6f05
 the rest services to vote
 
-To build the application run the command inside the votingpaper folder
+To build the application run the command inside the backend folder
 ```
 ./gradlew build
 ```
@@ -15,23 +11,13 @@ Start the Java application with the following commands:
 ```
 to start a MongoDB instance. Then:
 ```
-<<<<<<< HEAD
-java -jar build/libs/backend-1.0.0-SNAPSHOT.jar --server.port=8443
+java -jar build/libs/backend-0.0.1-SNAPSHOT.jar --server.port=8443
 ```
 and open `https://localhost:8443/swagger-ui.html` in your browser to connect to the vote application.
 
 If you need to start it on a environment production:
 ```
-java -jar build/libs/backend-1.0.0-SNAPSHOT.jar --server.port=8443 --server.ssl.key-store=/${your_path}/keystore.p12 --server.ssl.key-store-password=secret --server.ssl.keyStoreType=PKCS12 --server.ssl.keyAlias=tomcat
-=======
-java -jar build/libs/votingpaper-0.0.1-SNAPSHOT.jar --server.port=8543
-```
-and open `https://localhost:8543/swagger-ui.html` in your browser to connect to the vote application.
-
-If you need to start it on a environment production:
-```
-java -jar build/libs/votingpaper-1.0.0-SNAPSHOT.jar --server.port=8543 --server.ssl.key-store=/${your_path}/keystore.p12 --server.ssl.key-store-password=secret --server.ssl.keyStoreType=PKCS12 --server.ssl.keyAlias=tomcat
->>>>>>> 9e52b2a9f1a85a23b5b2b268e0e516b9213a6f05
+java -jar build/libs/backend-0.0.1-SNAPSHOT.jar --server.port=8443 --server.ssl.key-store=/${your_path}/keystore.p12 --server.ssl.key-store-password=secret --server.ssl.keyStoreType=PKCS12 --server.ssl.keyAlias=tomcat
 ```
 Before to start the HTTPS you need to create a keystore. You can use the following sample:
 ```
@@ -50,10 +36,10 @@ To make the project as an Eclipse project go in the root folder of the project a
 
 If you need a complete environment you can download docker and import the application through the command:
 ```
-docker pull vige/vota-votingpaper
+docker pull vige/vota-backend
 ```
 To run the image use the command:
 ```
-docker run -d --name vota-votingpaper -p8543:8543 vige/vota-votingpaper
+docker run -d --name vota-backend -p8443:8443 vige/vota-backend
 ```
-Then open `https://localhost:5443/swagger-ui.html` to connect to the vote application
+Then open `https://localhost:8443/swagger-ui.html` to connect to the vote application

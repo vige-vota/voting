@@ -2,11 +2,8 @@ package it.vige.labs.gc.votingpapers;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import it.vige.labs.gc.vote.Identifier;
 
-@JsonIgnoreProperties("name,cssStyle,color")
 public class VotingPaper extends Identifier {
     
     private int maxCandidates;
