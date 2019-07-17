@@ -28,7 +28,7 @@ ENV TERM xterm
 WORKDIR /workspace
 COPY / /workspace/vota
 RUN sudo chown -R votinguser:votinguser /workspace
-RUN cd vota && ./gradlew build
+RUN cd vota && ./gradlew build -x test
 RUN rm -Rf /home/votinguser/.gradle && \
 	mv /workspace/vota/build/libs/backend*.jar /workspace/vota.jar && \
 	rm -Rf /workspace/vota && \
