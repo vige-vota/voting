@@ -1,4 +1,4 @@
-#backend
+# backend
 the rest services to vote
 
 To build the application run the command inside the backend folder
@@ -25,18 +25,18 @@ keytool -genkey -alias tomcat -storetype PKCS12 -keyalg RSA -keysize 2048 -keyst
 ```
 moving the ${your_path} variable to your preferred path where put the keystore
 
-##Test
+## Test
 
 To execute the gradle tests only start before the votingpaper server
 
-##Eclipse
+## Eclipse
 
 To make the project as an Eclipse project go in the root folder of the project and run the following command:
 ```
 ./gradlew eclipse
 ```
 
-##Docker
+## Docker
 
 If you need a complete environment you can download docker and import the application through the command:
 ```
