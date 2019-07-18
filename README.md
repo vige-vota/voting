@@ -11,13 +11,13 @@ Start the Java application with the following commands:
 ```
 to start a MongoDB instance. Then:
 ```
-java -jar build/libs/backend-0.0.1-SNAPSHOT.jar --server.port=8443
+java -jar build/libs/backend-1.0.0-SNAPSHOT.jar --server.port=8080 --spring.profiles.active=dev
 ```
-and open `https://localhost:8443/swagger-ui.html` in your browser to connect to the vote application.
+and open `http://localhost:8080/swagger-ui.html` in your browser to connect to the vote application and open `https://localhost:8443/swagger-ui.html` in your browser to connect to the vote application.
 
 If you need to start it on a environment production:
 ```
-java -jar build/libs/backend-0.0.1-SNAPSHOT.jar --server.port=8443 --server.ssl.key-store=/${your_path}/keystore.p12 --server.ssl.key-store-password=secret --server.ssl.keyStoreType=PKCS12 --server.ssl.keyAlias=tomcat
+java -jar build/libs/backend-1.0.0-SNAPSHOT.jar --server.port=8443 --server.ssl.key-store=/${your_path}/keystore.p12 --server.ssl.key-store-password=secret --server.ssl.keyStoreType=PKCS12 --server.ssl.keyAlias=tomcat --spring.profiles.active=prod
 ```
 Before to start the HTTPS you need to create a keystore. You can use the following sample:
 ```

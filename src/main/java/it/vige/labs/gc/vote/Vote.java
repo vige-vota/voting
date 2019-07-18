@@ -6,8 +6,10 @@ public class Vote {
 
 	private List<VotingPaper> votingPapers;
 	
+	public Vote() {
+	}
+	
 	public Vote(List<VotingPaper> votingPapers) {
-		super();
 		this.votingPapers = votingPapers;
 	}
 
