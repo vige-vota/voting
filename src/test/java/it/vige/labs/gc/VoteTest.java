@@ -63,6 +63,59 @@ public class VoteTest {
 	}
 
 	@Test
+	public void onlySelection() {
+
+		Group matteoSalvini = new Group(95);
+		VotingPaper nazionali = new VotingPaper(86, null, matteoSalvini);
+
+		Vote vote = new Vote(Arrays.asList(new VotingPaper[] { nazionali }));
+		Messages messages = voteController.vote(vote);
+		logger.info(messages + "");
+		Assert.assertArrayEquals("only a group without party is ok", Validator.defaultMessage.getMessages().toArray(),
+				messages.getMessages().toArray());
+		Assert.assertTrue(messages.isOk());
+		
+		nazionali.setGroup(null);
+		messages = voteController.vote(vote);
+		logger.info(messages + "");
+		Assert.assertArrayEquals("no group and no party is not ok",
+				Validator.errorMessage.getMessages().toArray(), messages.getMessages().toArray());
+		Assert.assertFalse(messages.isOk());
+		
+		Party giorgiaMeloni = new Party(93);
+		nazionali.setParty(giorgiaMeloni);
+		messages = voteController.vote(vote);
+		logger.info(messages + "");
+		Assert.assertArrayEquals("a party without group is not ok",
+				Validator.errorMessage.getMessages().toArray(), messages.getMessages().toArray());
+		Assert.assertFalse(messages.isOk());
+		
+		Group michelBarbet = new Group(5);
+		VotingPaper comunali = new VotingPaper(0, null, michelBarbet);
+		vote = new Vote(Arrays.asList(new VotingPaper[] { comunali }));
+		messages = voteController.vote(vote);
+		logger.info(messages + "");
+		Assert.assertArrayEquals("only a group without party is ok", Validator.defaultMessage.getMessages().toArray(),
+				messages.getMessages().toArray());
+		Assert.assertTrue(messages.isOk());
+		
+		comunali.setGroup(null);
+		messages = voteController.vote(vote);
+		logger.info(messages + "");
+		Assert.assertArrayEquals("no group and no party is not ok",
+				Validator.errorMessage.getMessages().toArray(), messages.getMessages().toArray());
+		Assert.assertFalse(messages.isOk());
+		
+		Party pd = new Party(3);
+		comunali.setParty(pd);
+		messages = voteController.vote(vote);
+		logger.info(messages + "");
+		Assert.assertArrayEquals("a party without group is not ok",
+				Validator.errorMessage.getMessages().toArray(), messages.getMessages().toArray());
+		Assert.assertFalse(messages.isOk());
+	}
+
+	@Test
 	public void ids() {
 
 		Party giorgiaMeloni = new Party(93);

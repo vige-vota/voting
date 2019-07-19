@@ -86,24 +86,27 @@ public class Validator {
 	}
 
 	private boolean validateParty(List<Party> parties, it.vige.labs.gc.vote.Party party, int maxCandidates) {
-		boolean result = parties.parallelStream().anyMatch(e -> e.getId() == party.getId());
-		if (result && party.getCandidates() != null && !party.getCandidates().isEmpty()) {
-			if (party.getCandidates().size() <= maxCandidates) {
-				List<Candidate> candidates = parties.parallelStream().filter(e -> e.getId() == party.getId())
-						.flatMap(e -> e.getCandidates().parallelStream()).collect(Collectors.toList());
-				result = party.getCandidates().parallelStream()
-						.allMatch(e -> candidates.parallelStream().anyMatch(f -> e.getId() == f.getId()));
-				if (party.getCandidates().size() != 1) {
-					List<Character> sexCandidates = candidates.parallelStream()
-							.filter(e -> party.getCandidates().parallelStream().anyMatch(f -> f.getId() == e.getId()))
-							.map(f -> f.getSex()).collect(Collectors.toList());
-					result = sexCandidates.toString().matches("^(?=.*M)(?=.*F).+$");
+		if (party != null) {
+			boolean result = parties.parallelStream().anyMatch(e -> e.getId() == party.getId());
+			if (result && party.getCandidates() != null && !party.getCandidates().isEmpty()) {
+				if (party.getCandidates().size() <= maxCandidates) {
+					List<Candidate> candidates = parties.parallelStream().filter(e -> e.getId() == party.getId())
+							.flatMap(e -> e.getCandidates().parallelStream()).collect(Collectors.toList());
+					result = party.getCandidates().parallelStream()
+							.allMatch(e -> candidates.parallelStream().anyMatch(f -> e.getId() == f.getId()));
+					if (party.getCandidates().size() != 1) {
+						List<Character> sexCandidates = candidates.parallelStream().filter(
+								e -> party.getCandidates().parallelStream().anyMatch(f -> f.getId() == e.getId()))
+								.map(f -> f.getSex()).collect(Collectors.toList());
+						result = sexCandidates.toString().matches("^(?=.*M)(?=.*F).+$");
+					} else
+						result = true;
 				} else
-					result = true;
-			} else
-				result = false;
-		}
-		return result;
+					result = false;
+			}
+			return result;
+		} else
+			return true;
 	}
 
 	private VotingPapers getVotingPapers() {
