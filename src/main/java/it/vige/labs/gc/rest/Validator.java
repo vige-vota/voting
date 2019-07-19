@@ -55,32 +55,42 @@ public class Validator {
 			results[i] = false;
 		int i = 0;
 		for (VotingPaper votingPaper : vote.getVotingPapers()) {
-			it.vige.labs.gc.votingpapers.VotingPaper votingPaperFromJson = votingPapers.getVotingPapers()
-					.parallelStream().filter(e -> e.getId() == votingPaper.getId()).collect(Collectors.toList()).get(0);
-			if (votingPaper.getId() == votingPaperFromJson.getId()) {
-				List<Group> groups = votingPapers.getVotingPapers().parallelStream()
-						.filter(e -> e.getId() == votingPaper.getId()).collect(Collectors.toList()).get(0).getGroups();
+			if (votingPaper.getGroup() == null && votingPaper.getParty() == null)
+				results[i] = false;
+			else {
+				it.vige.labs.gc.votingpapers.VotingPaper votingPaperFromJson = votingPapers.getVotingPapers()
+						.parallelStream().filter(e -> e.getId() == votingPaper.getId()).collect(Collectors.toList())
+						.get(0);
+				if (votingPaper.getId() == votingPaperFromJson.getId()) {
+					List<Group> groups = votingPapers.getVotingPapers().parallelStream()
+							.filter(e -> e.getId() == votingPaper.getId()).collect(Collectors.toList()).get(0)
+							.getGroups();
 
-				List<Party> parties = groups.get(0).getParties();
-				if (votingPaper.getGroup() != null) {
-					if (!votingPaperFromJson.isDisjointed()) {
-						List<Group> matchedGroups = groups.parallelStream()
-								.filter(e -> e.getId() == votingPaper.getGroup().getId()).collect(Collectors.toList());
-						if (!matchedGroups.isEmpty())
-							parties = groups.parallelStream().filter(e -> e.getId() == votingPaper.getGroup().getId())
-									.collect(Collectors.toList()).get(0).getParties();
-						else
-							results[i] = false;
-					} else
-						parties = groups.parallelStream().flatMap(e -> e.getParties().parallelStream())
-								.collect(Collectors.toList());
-					if (groups.parallelStream().anyMatch(e -> e.getId() == votingPaper.getGroup().getId())
-							&& validateParty(parties, votingPaper.getParty(), votingPaperFromJson.getMaxCandidates()))
+					List<Party> parties = groups.parallelStream().flatMap(e -> e.getParties().parallelStream())
+							.collect(Collectors.toList());
+					if (votingPaper.getGroup() != null) {
+						if (!votingPaperFromJson.isDisjointed()) {
+							List<Group> matchedGroups = groups.parallelStream()
+									.filter(e -> e.getId() == votingPaper.getGroup().getId())
+									.collect(Collectors.toList());
+							if (!matchedGroups.isEmpty())
+								parties = groups.parallelStream()
+										.filter(e -> e.getId() == votingPaper.getGroup().getId())
+										.collect(Collectors.toList()).get(0).getParties();
+							else
+								results[i] = false;
+						}
+						if (groups.parallelStream().anyMatch(e -> e.getId() == votingPaper.getGroup().getId())
+								&& validateParty(parties, votingPaper.getParty(),
+										votingPaperFromJson.getMaxCandidates()))
+							results[i] = true;
+					} else if (!votingPaperFromJson.isDisjointed() && votingPaperFromJson.getGroups().size() > 1)
+						results[i] = false;
+					else if (validateParty(parties, votingPaper.getParty(), votingPaperFromJson.getMaxCandidates()))
 						results[i] = true;
-				} else if (validateParty(parties, votingPaper.getParty(), votingPaperFromJson.getMaxCandidates()))
-					results[i] = true;
+				}
+				i++;
 			}
-			i++;
 		}
 		return Arrays.stream(results).allMatch(e -> e == true) ? defaultMessage : errorMessage;
 	}

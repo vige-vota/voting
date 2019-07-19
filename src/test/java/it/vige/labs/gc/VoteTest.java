@@ -82,11 +82,11 @@ public class VoteTest {
 				Validator.errorMessage.getMessages().toArray(), messages.getMessages().toArray());
 		Assert.assertFalse(messages.isOk());
 		
-		Party giorgiaMeloni = new Party(93);
-		nazionali.setParty(giorgiaMeloni);
+		Party fratelliDItalia = new Party(96);
+		nazionali.setParty(fratelliDItalia);
 		messages = voteController.vote(vote);
 		logger.info(messages + "");
-		Assert.assertArrayEquals("a party without group is not ok",
+		Assert.assertArrayEquals("a party without group is not ok if not disjointed",
 				Validator.errorMessage.getMessages().toArray(), messages.getMessages().toArray());
 		Assert.assertFalse(messages.isOk());
 		
@@ -110,9 +110,9 @@ public class VoteTest {
 		comunali.setParty(pd);
 		messages = voteController.vote(vote);
 		logger.info(messages + "");
-		Assert.assertArrayEquals("a party without group is not ok",
-				Validator.errorMessage.getMessages().toArray(), messages.getMessages().toArray());
-		Assert.assertFalse(messages.isOk());
+		Assert.assertArrayEquals("a party without group is ok if disjointed",
+				Validator.defaultMessage.getMessages().toArray(), messages.getMessages().toArray());
+		Assert.assertTrue(messages.isOk());
 	}
 
 	@Test
