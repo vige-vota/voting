@@ -23,7 +23,14 @@ Before to start the HTTPS you need to create a keystore. You can use the followi
 ```
 keytool -genkey -alias tomcat -storetype PKCS12 -keyalg RSA -keysize 2048 -keystore /${your_path}/keystore.p12 -validity 3650 -dname "CN=backend.vota.vige.it, OU=Vige, O=Vige, L=Rome, S=Italy, C=IT" -storepass secret -keypass secret
 ```
-moving the ${your_path} variable to your preferred path where put the keystore
+moving the ${your_path} variable to your preferred path where put the keystore.
+
+Add the following DNS in your /etc/hosts file:
+```
+$IP_ADDRESS  votingpaper.vota.vige.it
+```
+
+where in $IP_ADDRESS you must choose the ip address where is located the server
 
 ## Test
 
@@ -44,6 +51,6 @@ docker pull vige/vota-backend
 ```
 To run the image use the command:
 ```
-docker run -d --name vota-backend -p8443:8443 -e VOTINGPAPER_SCHEME=https -e VOTINGPAPER_HOST=localhost -e VOTINGPAPER_PORT=8543 vige/vota-backend
+docker run -d --name vota-backend -p8443:8443 vige/vota-backend
 ```
 Then open `https://backend.vota.vige.it:8443/swagger-ui.html` to connect to the vote application
