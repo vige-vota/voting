@@ -13,7 +13,7 @@ to start a MongoDB instance. Then:
 ```
 java -jar build/libs/backend-1.0.0-SNAPSHOT.jar --server.port=8080 --spring.profiles.active=dev
 ```
-and open `http://localhost:8080/swagger-ui.html` in your browser to connect to the vote application and open `https://localhost:8443/swagger-ui.html` in your browser to connect to the vote application.
+and open `http://localhost:8080/swagger-ui.html` in your browser to connect to the vote application.
 
 If you need to start it on a environment production:
 ```
@@ -46,4 +46,4 @@ To run the image use the command:
 ```
 docker run -d --name vota-backend -p8443:8443 -e VOTINGPAPER_SCHEME=https -e VOTINGPAPER_HOST=localhost -e VOTINGPAPER_PORT=8543 vige/vota-backend
 ```
-Then open `https://localhost:8443/swagger-ui.html` to connect to the vote application
+Then open `https://backend.vota.vige.it:8443/swagger-ui.html` to connect to the vote application
