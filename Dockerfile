@@ -26,7 +26,7 @@ USER votinguser
 ENV TERM xterm
 
 ENV VOTINGPAPER_SCHEME https
-ENV VOTINGPAPER_HOST localhost
+ENV VOTINGPAPER_HOST votingpaper.vota.vige.it
 ENV VOTINGPAPER_PORT 8543
 
 WORKDIR /workspace
@@ -39,7 +39,7 @@ RUN rm -Rf /home/votinguser/.gradle && \
 	mkdir /workspace/mongodb && \
 	echo "nohup /usr/bin/mongod --dbpath /workspace/mongodb &" > /workspace/start_mongo.sh && \
 	chmod 775 /workspace/start_mongo.sh && \
-    keytool -genkey -alias tomcat -storetype PKCS12 -keyalg RSA -keysize 2048 -keystore /workspace/keystore.p12 -validity 3650 -dname "CN=localhost, OU=Vige, O=Vige, L=Rome, S=Italy, C=IT" -storepass secret -keypass secret
+    keytool -genkey -alias tomcat -storetype PKCS12 -keyalg RSA -keysize 2048 -keystore /workspace/keystore.p12 -validity 3650 -dname "CN=backend.vota.vige.it, OU=Vige, O=Vige, L=Rome, S=Italy, C=IT" -storepass secret -keypass secret
 
 CMD /workspace/start_mongo.sh && \
 	java -jar /workspace/vota.jar --server.port=8443 --server.ssl.key-store=/workspace/keystore.p12 --server.ssl.key-store-password=secret --server.ssl.keyStoreType=PKCS12 --server.ssl.keyAlias=tomcat --spring.profiles.active=prod --votingpapers.scheme=$VOTINGPAPER_SCHEME --votingpapers.host=$VOTINGPAPER_HOST --votingpapers.port=$VOTINGPAPER_PORT && \

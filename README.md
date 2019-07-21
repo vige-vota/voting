@@ -21,7 +21,7 @@ java -jar build/libs/backend-1.0.0-SNAPSHOT.jar --server.port=8443 --server.ssl.
 ```
 Before to start the HTTPS you need to create a keystore. You can use the following sample:
 ```
-keytool -genkey -alias tomcat -storetype PKCS12 -keyalg RSA -keysize 2048 -keystore /${your_path}/keystore.p12 -validity 3650 -dname "CN=localhost, OU=Vige, O=Vige, L=Rome, S=Italy, C=IT" -storepass secret -keypass secret
+keytool -genkey -alias tomcat -storetype PKCS12 -keyalg RSA -keysize 2048 -keystore /${your_path}/keystore.p12 -validity 3650 -dname "CN=backend.vota.vige.it, OU=Vige, O=Vige, L=Rome, S=Italy, C=IT" -storepass secret -keypass secret
 ```
 moving the ${your_path} variable to your preferred path where put the keystore
 
