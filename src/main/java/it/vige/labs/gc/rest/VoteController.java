@@ -26,7 +26,8 @@ public class VoteController {
 	@PostMapping(value = "/vote")
 	public Messages vote(@RequestBody Vote vote) {
 		Messages messages = validator.validate(vote);
-		updateResult.execute(vote, result);
+		result.add(vote);
+		//updateResult.execute(vote, result);
 		return messages;
 	}
 
