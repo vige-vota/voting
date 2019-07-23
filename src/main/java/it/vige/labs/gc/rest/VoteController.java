@@ -2,7 +2,6 @@ package it.vige.labs.gc.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,10 +33,5 @@ public class VoteController {
 	@GetMapping(value = "/result")
 	public VotingPapers getResult() {
 		return result;
-	}
-
-	@DeleteMapping(value = "/reset")
-	public void reset() {
-		result = new VotingPapers();
 	}
 }
