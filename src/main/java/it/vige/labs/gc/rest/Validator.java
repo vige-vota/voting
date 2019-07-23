@@ -13,9 +13,9 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import it.vige.labs.gc.result.Message;
-import it.vige.labs.gc.result.Messages;
-import it.vige.labs.gc.result.Severity;
+import it.vige.labs.gc.messages.Message;
+import it.vige.labs.gc.messages.Messages;
+import it.vige.labs.gc.messages.Severity;
 import it.vige.labs.gc.vote.Vote;
 import it.vige.labs.gc.vote.VotingPaper;
 import it.vige.labs.gc.votingpapers.Candidate;

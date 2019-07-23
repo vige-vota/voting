@@ -12,9 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import it.vige.labs.gc.messages.Messages;
 import it.vige.labs.gc.rest.Validator;
 import it.vige.labs.gc.rest.VoteController;
-import it.vige.labs.gc.result.Messages;
+import it.vige.labs.gc.result.VotingPapers;
 import it.vige.labs.gc.vote.Candidate;
 import it.vige.labs.gc.vote.Group;
 import it.vige.labs.gc.vote.Party;
@@ -60,6 +61,75 @@ public class VoteTest {
 		Assert.assertArrayEquals("the result is ok", Validator.defaultMessage.getMessages().toArray(),
 				messages.getMessages().toArray());
 		Assert.assertTrue(messages.isOk());
+
+		VotingPapers votingPapers = voteController.getResult();
+		Assert.assertEquals(1, votingPapers.getElectors());
+		Assert.assertEquals(4, votingPapers.getVotingPapers().size());
+		Assert.assertTrue(votingPapers.getVotingPapers().stream().allMatch(e -> e.getElectors() == 1));
+		votingPapers.getVotingPapers().stream().forEach(e -> {
+			Assert.assertTrue(e.getId() == 0 || e.getId() == 11 || e.getId() == 86 || e.getId() == 121);
+			if (e.getId() == 0) {
+				Assert.assertEquals(1,
+						e.getGroups().stream().filter(f -> f.getId() == 5).findFirst().get().getElectors());
+				Assert.assertTrue(e.getGroups().stream()
+						.flatMap(f -> Arrays.stream(f.getParties().toArray(new it.vige.labs.gc.result.Party[0])))
+						.allMatch(g -> g.getId() == 3 && g.getElectors() == 1));
+				Assert.assertTrue(e.getGroups().stream()
+						.flatMap(f -> Arrays.stream(f.getParties().toArray(new it.vige.labs.gc.result.Party[0])))
+						.flatMap(f -> Arrays.stream(f.getCandidates().toArray(new it.vige.labs.gc.result.Candidate[0])))
+						.count() == 0);
+			}
+			if (e.getId() == 11) {
+				Assert.assertEquals(1,
+						e.getGroups().stream().filter(f -> f.getId() == 12).findFirst().get().getElectors());
+				Assert.assertTrue(e.getGroups().stream()
+						.flatMap(f -> Arrays.stream(f.getParties().toArray(new it.vige.labs.gc.result.Party[0])))
+						.allMatch(g -> g.getId() == 28 && g.getElectors() == 1));
+				Assert.assertFalse(e.getGroups().stream()
+						.flatMap(f -> Arrays.stream(f.getParties().toArray(new it.vige.labs.gc.result.Party[0])))
+						.flatMap(f -> Arrays.stream(f.getCandidates().toArray(new it.vige.labs.gc.result.Candidate[0])))
+						.count() == 0);
+				Assert.assertTrue(e.getGroups().stream()
+						.flatMap(f -> Arrays.stream(f.getParties().toArray(new it.vige.labs.gc.result.Party[0])))
+						.flatMap(f -> Arrays.stream(f.getCandidates().toArray(new it.vige.labs.gc.result.Candidate[0])))
+						.allMatch(f -> f.getId() == 31 || f.getId() == 32));
+				Assert.assertTrue(e.getGroups().stream()
+						.flatMap(f -> Arrays.stream(f.getParties().toArray(new it.vige.labs.gc.result.Party[0])))
+						.flatMap(f -> Arrays.stream(f.getCandidates().toArray(new it.vige.labs.gc.result.Candidate[0])))
+						.allMatch(f -> f.getElectors() == 1));
+			}
+			if (e.getId() == 86) {
+				Assert.assertEquals(1,
+						e.getGroups().stream().filter(f -> f.getId() == 93).findFirst().get().getElectors());
+				Assert.assertTrue(e.getGroups().stream()
+						.flatMap(f -> Arrays.stream(f.getParties().toArray(new it.vige.labs.gc.result.Party[0])))
+						.allMatch(g -> g.getId() == 94 && g.getElectors() == 1));
+				Assert.assertTrue(e.getGroups().stream()
+						.flatMap(f -> Arrays.stream(f.getParties().toArray(new it.vige.labs.gc.result.Party[0])))
+						.flatMap(f -> Arrays.stream(f.getCandidates().toArray(new it.vige.labs.gc.result.Candidate[0])))
+						.count() == 0);
+			}
+			if (e.getId() == 121) {
+				Assert.assertTrue(e.getGroups().stream().allMatch(f -> f.isEmpty() == true));
+				Assert.assertTrue(e.getGroups().stream()
+						.flatMap(f -> Arrays.stream(f.getParties().toArray(new it.vige.labs.gc.result.Party[0])))
+						.allMatch(g -> g.getId() == 127 && g.getElectors() == 1));
+				Assert.assertFalse(e.getGroups().stream()
+						.flatMap(f -> Arrays.stream(f.getParties().toArray(new it.vige.labs.gc.result.Party[0])))
+						.flatMap(f -> Arrays.stream(f.getCandidates().toArray(new it.vige.labs.gc.result.Candidate[0])))
+						.count() == 0);
+				Assert.assertTrue(e.getGroups().stream()
+						.flatMap(f -> Arrays.stream(f.getParties().toArray(new it.vige.labs.gc.result.Party[0])))
+						.flatMap(f -> Arrays.stream(f.getCandidates().toArray(new it.vige.labs.gc.result.Candidate[0])))
+						.allMatch(f -> f.getId() == 171 || f.getId() == 172 || f.getId() == 173));
+				Assert.assertTrue(e.getGroups().stream()
+						.flatMap(f -> Arrays.stream(f.getParties().toArray(new it.vige.labs.gc.result.Party[0])))
+						.flatMap(f -> Arrays.stream(f.getCandidates().toArray(new it.vige.labs.gc.result.Candidate[0])))
+						.allMatch(f -> f.getElectors() == 1));
+			}
+		});
+
+		voteController.reset();
 	}
 
 	@Test
@@ -74,14 +144,14 @@ public class VoteTest {
 		Assert.assertArrayEquals("only a group without party is ok", Validator.defaultMessage.getMessages().toArray(),
 				messages.getMessages().toArray());
 		Assert.assertTrue(messages.isOk());
-		
+
 		nazionali.setGroup(null);
 		messages = voteController.vote(vote);
 		logger.info(messages + "");
-		Assert.assertArrayEquals("no group and no party is not ok",
-				Validator.errorMessage.getMessages().toArray(), messages.getMessages().toArray());
+		Assert.assertArrayEquals("no group and no party is not ok", Validator.errorMessage.getMessages().toArray(),
+				messages.getMessages().toArray());
 		Assert.assertFalse(messages.isOk());
-		
+
 		Party fratelliDItalia = new Party(96);
 		nazionali.setParty(fratelliDItalia);
 		messages = voteController.vote(vote);
@@ -89,7 +159,7 @@ public class VoteTest {
 		Assert.assertArrayEquals("a party without group is not ok if not disjointed",
 				Validator.errorMessage.getMessages().toArray(), messages.getMessages().toArray());
 		Assert.assertFalse(messages.isOk());
-		
+
 		Group michelBarbet = new Group(5);
 		VotingPaper comunali = new VotingPaper(0, null, michelBarbet);
 		vote = new Vote(Arrays.asList(new VotingPaper[] { comunali }));
@@ -98,14 +168,14 @@ public class VoteTest {
 		Assert.assertArrayEquals("only a group without party is ok", Validator.defaultMessage.getMessages().toArray(),
 				messages.getMessages().toArray());
 		Assert.assertTrue(messages.isOk());
-		
+
 		comunali.setGroup(null);
 		messages = voteController.vote(vote);
 		logger.info(messages + "");
-		Assert.assertArrayEquals("no group and no party is not ok",
-				Validator.errorMessage.getMessages().toArray(), messages.getMessages().toArray());
+		Assert.assertArrayEquals("no group and no party is not ok", Validator.errorMessage.getMessages().toArray(),
+				messages.getMessages().toArray());
 		Assert.assertFalse(messages.isOk());
-		
+
 		Party pd = new Party(3);
 		comunali.setParty(pd);
 		messages = voteController.vote(vote);
@@ -113,6 +183,8 @@ public class VoteTest {
 		Assert.assertArrayEquals("a party without group is ok if disjointed",
 				Validator.defaultMessage.getMessages().toArray(), messages.getMessages().toArray());
 		Assert.assertTrue(messages.isOk());
+
+		voteController.reset();
 	}
 
 	@Test
@@ -125,18 +197,20 @@ public class VoteTest {
 		Vote vote = new Vote(Arrays.asList(new VotingPaper[] { nazionali }));
 		Messages messages = voteController.vote(vote);
 		logger.info(messages + "");
-		Assert.assertArrayEquals("the ids are inverted",
-				Validator.errorMessage.getMessages().toArray(), messages.getMessages().toArray());
+		Assert.assertArrayEquals("the ids are inverted", Validator.errorMessage.getMessages().toArray(),
+				messages.getMessages().toArray());
 		Assert.assertFalse(messages.isOk());
-		
+
 		Party noiConSalvini = new Party(94);
 		matteoSalvini.setId(1122);
 		nazionali.setParty(noiConSalvini);
 		messages = voteController.vote(vote);
 		logger.info(messages + "");
-		Assert.assertArrayEquals("the id doesn't exist",
-				Validator.errorMessage.getMessages().toArray(), messages.getMessages().toArray());
+		Assert.assertArrayEquals("the id doesn't exist", Validator.errorMessage.getMessages().toArray(),
+				messages.getMessages().toArray());
 		Assert.assertFalse(messages.isOk());
+
+		voteController.reset();
 	}
 
 	@Test
@@ -152,6 +226,8 @@ public class VoteTest {
 		Assert.assertArrayEquals("the vote is not disjointed, you can select only the group of the party",
 				Validator.errorMessage.getMessages().toArray(), messages.getMessages().toArray());
 		Assert.assertFalse(messages.isOk());
+
+		voteController.reset();
 	}
 
 	@Test
@@ -193,6 +269,8 @@ public class VoteTest {
 		Assert.assertArrayEquals("no candidates, the result is ok", Validator.defaultMessage.getMessages().toArray(),
 				messages.getMessages().toArray());
 		Assert.assertTrue(messages.isOk());
+
+		voteController.reset();
 	}
 
 }
