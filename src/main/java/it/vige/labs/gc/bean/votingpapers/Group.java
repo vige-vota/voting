@@ -1,8 +1,8 @@
-package it.vige.labs.gc.votingpapers;
+package it.vige.labs.gc.bean.votingpapers;
 
 import java.util.List;
 
-import it.vige.labs.gc.vote.Identifier;
+import it.vige.labs.gc.bean.vote.Identifier;
 
 public class Group extends Identifier {
 

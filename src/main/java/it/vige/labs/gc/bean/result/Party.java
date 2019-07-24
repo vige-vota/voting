@@ -1,4 +1,4 @@
-package it.vige.labs.gc.result;
+package it.vige.labs.gc.bean.result;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,7 +11,7 @@ public class Party extends Electors {
 
 	}
 
-	public Party(it.vige.labs.gc.vote.Party party) {
+	public Party(it.vige.labs.gc.bean.vote.Party party) {
 		add(party);
 	}
 
@@ -23,7 +23,7 @@ public class Party extends Electors {
 		this.candidates = candidates;
 	}
 
-	public void add(it.vige.labs.gc.vote.Party party) {
+	public void add(it.vige.labs.gc.bean.vote.Party party) {
 		if (party != null) {
 			setElectors(getElectors() + 1);
 			setId(party.getId());

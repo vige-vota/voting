@@ -1,9 +1,9 @@
-package it.vige.labs.gc.result;
+package it.vige.labs.gc.bean.result;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import it.vige.labs.gc.vote.Vote;
+import it.vige.labs.gc.bean.vote.Vote;
 
 public class VotingPapers extends Electors {
 

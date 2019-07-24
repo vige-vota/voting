@@ -7,9 +7,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import it.vige.labs.gc.bean.VoteRequest;
+import it.vige.labs.gc.bean.result.VotingPapers;
+import it.vige.labs.gc.bean.vote.Vote;
 import it.vige.labs.gc.messages.Messages;
-import it.vige.labs.gc.result.VotingPapers;
-import it.vige.labs.gc.vote.Vote;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -31,5 +32,13 @@ public class VoteController {
 	@GetMapping(value = "/result")
 	public VotingPapers getResult() {
 		return result;
+	}
+
+	@PostMapping(value = "/result")
+	public VotingPapers getResult(@RequestBody VoteRequest voteRequest) {
+		Vote vote = voteRequest.getVote();
+		VotingPapers votingPaper = voteRequest.getVotingPapers();
+		votingPaper.add(vote);
+		return votingPaper;
 	}
 }

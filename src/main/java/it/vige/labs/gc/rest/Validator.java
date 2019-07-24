@@ -13,15 +13,15 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import it.vige.labs.gc.bean.vote.Vote;
+import it.vige.labs.gc.bean.vote.VotingPaper;
+import it.vige.labs.gc.bean.votingpapers.Candidate;
+import it.vige.labs.gc.bean.votingpapers.Group;
+import it.vige.labs.gc.bean.votingpapers.Party;
+import it.vige.labs.gc.bean.votingpapers.VotingPapers;
 import it.vige.labs.gc.messages.Message;
 import it.vige.labs.gc.messages.Messages;
 import it.vige.labs.gc.messages.Severity;
-import it.vige.labs.gc.vote.Vote;
-import it.vige.labs.gc.vote.VotingPaper;
-import it.vige.labs.gc.votingpapers.Candidate;
-import it.vige.labs.gc.votingpapers.Group;
-import it.vige.labs.gc.votingpapers.Party;
-import it.vige.labs.gc.votingpapers.VotingPapers;
 
 @Component
 public class Validator {
@@ -58,7 +58,7 @@ public class Validator {
 			if (votingPaper.getGroup() == null && votingPaper.getParty() == null)
 				results[i] = false;
 			else {
-				it.vige.labs.gc.votingpapers.VotingPaper votingPaperFromJson = votingPapers.getVotingPapers()
+				it.vige.labs.gc.bean.votingpapers.VotingPaper votingPaperFromJson = votingPapers.getVotingPapers()
 						.parallelStream().filter(e -> e.getId() == votingPaper.getId()).collect(Collectors.toList())
 						.get(0);
 				if (votingPaper.getId() == votingPaperFromJson.getId()) {
@@ -95,7 +95,7 @@ public class Validator {
 		return Arrays.stream(results).allMatch(e -> e == true) ? defaultMessage : errorMessage;
 	}
 
-	private boolean validateParty(List<Party> parties, it.vige.labs.gc.vote.Party party, int maxCandidates) {
+	private boolean validateParty(List<Party> parties, it.vige.labs.gc.bean.vote.Party party, int maxCandidates) {
 		if (party != null) {
 			boolean result = parties.parallelStream().anyMatch(e -> e.getId() == party.getId());
 			if (result && party.getCandidates() != null && !party.getCandidates().isEmpty()) {

@@ -1,6 +1,6 @@
-package it.vige.labs.gc.result;
+package it.vige.labs.gc.bean.result;
 
-import it.vige.labs.gc.vote.Identifier;
+import it.vige.labs.gc.bean.vote.Identifier;
 
 public class Electors extends Identifier {
 

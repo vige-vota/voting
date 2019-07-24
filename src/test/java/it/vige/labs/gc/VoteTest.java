@@ -12,15 +12,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import it.vige.labs.gc.bean.VoteRequest;
+import it.vige.labs.gc.bean.result.VotingPapers;
+import it.vige.labs.gc.bean.vote.Candidate;
+import it.vige.labs.gc.bean.vote.Group;
+import it.vige.labs.gc.bean.vote.Party;
+import it.vige.labs.gc.bean.vote.Vote;
+import it.vige.labs.gc.bean.vote.VotingPaper;
 import it.vige.labs.gc.messages.Messages;
 import it.vige.labs.gc.rest.Validator;
 import it.vige.labs.gc.rest.VoteController;
-import it.vige.labs.gc.result.VotingPapers;
-import it.vige.labs.gc.vote.Candidate;
-import it.vige.labs.gc.vote.Group;
-import it.vige.labs.gc.vote.Party;
-import it.vige.labs.gc.vote.Vote;
-import it.vige.labs.gc.vote.VotingPaper;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -62,78 +63,78 @@ public class VoteTest {
 				messages.getMessages().toArray());
 		Assert.assertTrue(messages.isOk());
 
-		VotingPapers votingPapers = voteController.getResult();
+		VotingPapers votingPapers = voteController.getResult(new VoteRequest(vote, new VotingPapers()));
 		Assert.assertTrue(votingPapers.getElectors() >= 1);
 		Assert.assertTrue(votingPapers.getVotingPapers().size() == 4);
-		Assert.assertTrue(votingPapers.getVotingPapers().values().stream().allMatch(e -> e.getElectors() >= 1));
+		Assert.assertTrue(votingPapers.getVotingPapers().values().stream().allMatch(e -> e.getElectors() == 1));
 		votingPapers.getVotingPapers().values().stream().forEach(e -> {
 			Assert.assertTrue(e.getId() == 0 || e.getId() == 11 || e.getId() == 86 || e.getId() == 121);
 			if (e.getId() == 0) {
 				Assert.assertTrue(e.getGroups().values().stream().filter(f -> f.getId() == 5).findFirst().get()
-						.getElectors() >= 1);
+						.getElectors() == 1);
 				Assert.assertTrue(e.getGroups().values().stream().flatMap(
-						f -> Arrays.stream(f.getParties().values().toArray(new it.vige.labs.gc.result.Party[0])))
-						.allMatch(g -> g.getId() == 3 && g.getElectors() >= 1));
+						f -> Arrays.stream(f.getParties().values().toArray(new it.vige.labs.gc.bean.result.Party[0])))
+						.allMatch(g -> g.getId() == 3 && g.getElectors() == 1));
 				Assert.assertTrue(e.getGroups().values().stream().flatMap(
-						f -> Arrays.stream(f.getParties().values().toArray(new it.vige.labs.gc.result.Party[0])))
+						f -> Arrays.stream(f.getParties().values().toArray(new it.vige.labs.gc.bean.result.Party[0])))
 						.flatMap(f -> Arrays
-								.stream(f.getCandidates().values().toArray(new it.vige.labs.gc.result.Candidate[0])))
+								.stream(f.getCandidates().values().toArray(new it.vige.labs.gc.bean.result.Candidate[0])))
 						.count() == 0);
 			}
 			if (e.getId() == 11) {
 				Assert.assertTrue(e.getGroups().values().stream().filter(f -> f.getId() == 12).findFirst().get()
-						.getElectors() <= 5);
+						.getElectors() == 1);
 				Assert.assertTrue(e.getGroups().values().stream().flatMap(
-						f -> Arrays.stream(f.getParties().values().toArray(new it.vige.labs.gc.result.Party[0])))
-						.allMatch(g -> g.getId() == 28 && g.getElectors() >= 1));
+						f -> Arrays.stream(f.getParties().values().toArray(new it.vige.labs.gc.bean.result.Party[0])))
+						.allMatch(g -> g.getId() == 28 && g.getElectors() == 1));
 				Assert.assertFalse(e.getGroups().values().stream().flatMap(
-						f -> Arrays.stream(f.getParties().values().toArray(new it.vige.labs.gc.result.Party[0])))
+						f -> Arrays.stream(f.getParties().values().toArray(new it.vige.labs.gc.bean.result.Party[0])))
 						.flatMap(f -> Arrays
-								.stream(f.getCandidates().values().toArray(new it.vige.labs.gc.result.Candidate[0])))
+								.stream(f.getCandidates().values().toArray(new it.vige.labs.gc.bean.result.Candidate[0])))
 						.count() == 0);
 				Assert.assertTrue(e.getGroups().values().stream().flatMap(
-						f -> Arrays.stream(f.getParties().values().toArray(new it.vige.labs.gc.result.Party[0])))
+						f -> Arrays.stream(f.getParties().values().toArray(new it.vige.labs.gc.bean.result.Party[0])))
 						.flatMap(f -> Arrays
-								.stream(f.getCandidates().values().toArray(new it.vige.labs.gc.result.Candidate[0])))
+								.stream(f.getCandidates().values().toArray(new it.vige.labs.gc.bean.result.Candidate[0])))
 						.anyMatch(f -> f.getId() == 31 || f.getId() == 32));
 				Assert.assertTrue(e.getGroups().values().stream().flatMap(
-						f -> Arrays.stream(f.getParties().values().toArray(new it.vige.labs.gc.result.Party[0])))
+						f -> Arrays.stream(f.getParties().values().toArray(new it.vige.labs.gc.bean.result.Party[0])))
 						.flatMap(f -> Arrays
-								.stream(f.getCandidates().values().toArray(new it.vige.labs.gc.result.Candidate[0])))
-						.allMatch(f -> f.getElectors() >= 1));
+								.stream(f.getCandidates().values().toArray(new it.vige.labs.gc.bean.result.Candidate[0])))
+						.allMatch(f -> f.getElectors() == 1));
 			}
 			if (e.getId() == 86) {
 				Assert.assertTrue(e.getGroups().values().stream().filter(f -> f.getId() == 93).findFirst().get()
 						.getElectors() >= 1);
 				Assert.assertTrue(e.getGroups().values().stream().flatMap(
-						f -> Arrays.stream(f.getParties().values().toArray(new it.vige.labs.gc.result.Party[0])))
-						.anyMatch(g -> g.getId() == 94 && g.getElectors() >= 1));
+						f -> Arrays.stream(f.getParties().values().toArray(new it.vige.labs.gc.bean.result.Party[0])))
+						.anyMatch(g -> g.getId() == 94 && g.getElectors() == 1));
 				Assert.assertTrue(e.getGroups().values().stream().flatMap(
-						f -> Arrays.stream(f.getParties().values().toArray(new it.vige.labs.gc.result.Party[0])))
+						f -> Arrays.stream(f.getParties().values().toArray(new it.vige.labs.gc.bean.result.Party[0])))
 						.flatMap(f -> Arrays
-								.stream(f.getCandidates().values().toArray(new it.vige.labs.gc.result.Candidate[0])))
+								.stream(f.getCandidates().values().toArray(new it.vige.labs.gc.bean.result.Candidate[0])))
 						.count() == 0);
 			}
 			if (e.getId() == 121) {
 				Assert.assertTrue(e.getGroups().values().stream().allMatch(f -> f.isEmpty() == true));
 				Assert.assertTrue(e.getGroups().values().stream().flatMap(
-						f -> Arrays.stream(f.getParties().values().toArray(new it.vige.labs.gc.result.Party[0])))
-						.allMatch(g -> g.getId() == 127 && g.getElectors() >= 1));
+						f -> Arrays.stream(f.getParties().values().toArray(new it.vige.labs.gc.bean.result.Party[0])))
+						.allMatch(g -> g.getId() == 127 && g.getElectors() == 1));
 				Assert.assertFalse(e.getGroups().values().stream().flatMap(
-						f -> Arrays.stream(f.getParties().values().toArray(new it.vige.labs.gc.result.Party[0])))
+						f -> Arrays.stream(f.getParties().values().toArray(new it.vige.labs.gc.bean.result.Party[0])))
 						.flatMap(f -> Arrays
-								.stream(f.getCandidates().values().toArray(new it.vige.labs.gc.result.Candidate[0])))
+								.stream(f.getCandidates().values().toArray(new it.vige.labs.gc.bean.result.Candidate[0])))
 						.count() == 0);
 				Assert.assertTrue(e.getGroups().values().stream().flatMap(
-						f -> Arrays.stream(f.getParties().values().toArray(new it.vige.labs.gc.result.Party[0])))
+						f -> Arrays.stream(f.getParties().values().toArray(new it.vige.labs.gc.bean.result.Party[0])))
 						.flatMap(f -> Arrays
-								.stream(f.getCandidates().values().toArray(new it.vige.labs.gc.result.Candidate[0])))
+								.stream(f.getCandidates().values().toArray(new it.vige.labs.gc.bean.result.Candidate[0])))
 						.allMatch(f -> f.getId() == 171 || f.getId() == 172 || f.getId() == 173));
 				Assert.assertTrue(e.getGroups().values().stream().flatMap(
-						f -> Arrays.stream(f.getParties().values().toArray(new it.vige.labs.gc.result.Party[0])))
+						f -> Arrays.stream(f.getParties().values().toArray(new it.vige.labs.gc.bean.result.Party[0])))
 						.flatMap(f -> Arrays
-								.stream(f.getCandidates().values().toArray(new it.vige.labs.gc.result.Candidate[0])))
-						.allMatch(f -> f.getElectors() >= 1));
+								.stream(f.getCandidates().values().toArray(new it.vige.labs.gc.bean.result.Candidate[0])))
+						.allMatch(f -> f.getElectors() == 1));
 			}
 		});
 	}

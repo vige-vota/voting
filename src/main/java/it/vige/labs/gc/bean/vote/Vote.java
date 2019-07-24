@@ -1,4 +1,4 @@
-package it.vige.labs.gc.vote;
+package it.vige.labs.gc.bean.vote;
 
 import java.util.List;
 

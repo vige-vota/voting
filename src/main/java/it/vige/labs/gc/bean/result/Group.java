@@ -1,4 +1,4 @@
-package it.vige.labs.gc.result;
+package it.vige.labs.gc.bean.result;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,7 +13,7 @@ public class Group extends Electors {
 
 	}
 
-	public Group(it.vige.labs.gc.vote.VotingPaper votingPaper) {
+	public Group(it.vige.labs.gc.bean.vote.VotingPaper votingPaper) {
 		add(votingPaper);
 	}
 
@@ -33,7 +33,7 @@ public class Group extends Electors {
 		this.empty = empty;
 	}
 
-	public void add(it.vige.labs.gc.vote.VotingPaper votingPaper) {
+	public void add(it.vige.labs.gc.bean.vote.VotingPaper votingPaper) {
 		setElectors(getElectors() + 1);
 		if (votingPaper.getGroup() != null)
 			setId(votingPaper.getGroup().getId());
