@@ -115,10 +115,6 @@ public class VoteTest {
 						.count() == 0);
 			}
 			if (e.getId() == 121) {
-				System.out.println(e.getGroups().size());
-				System.out.println(e.getGroups().get(0));
-				System.out.println(e.getGroups().get(0).getId());
-				System.out.println(e.getGroups().get(0).isEmpty());
 				Assert.assertTrue(e.getGroups().values().stream().allMatch(f -> f.isEmpty() == true));
 				Assert.assertTrue(e.getGroups().values().stream().flatMap(
 						f -> Arrays.stream(f.getParties().values().toArray(new it.vige.labs.gc.result.Party[0])))
