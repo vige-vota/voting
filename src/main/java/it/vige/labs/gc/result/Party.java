@@ -1,9 +1,7 @@
 package it.vige.labs.gc.result;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class Party extends Electors {
 
@@ -14,18 +12,7 @@ public class Party extends Electors {
 	}
 
 	public Party(it.vige.labs.gc.vote.Party party) {
-		if (party != null) {
-			setElectors(getElectors() + 1);
-			setId(party.getId());
-			if (party.getCandidates() != null) {
-				List<Candidate> cas = party.getCandidates().parallelStream().map(e -> new Candidate(e))
-						.collect(Collectors.toList());
-				cas.forEach(e -> {
-					if (!candidates.containsKey(e.getId()))
-						candidates.put(e.getId(), e);
-				});
-			}
-		}
+		add(party);
 	}
 
 	public Map<Integer, Candidate> getCandidates() {
@@ -34,6 +21,21 @@ public class Party extends Electors {
 
 	public void setCandidates(Map<Integer, Candidate> candidates) {
 		this.candidates = candidates;
+	}
+
+	public void add(it.vige.labs.gc.vote.Party party) {
+		if (party != null) {
+			setElectors(getElectors() + 1);
+			setId(party.getId());
+			if (party.getCandidates() != null) {
+				party.getCandidates().forEach(e -> {
+					if (!candidates.containsKey(e.getId()))
+						candidates.put(e.getId(), new Candidate(e));
+					else
+						candidates.get(e.getId()).add(e);
+				});
+			}
+		}
 	}
 
 }

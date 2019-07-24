@@ -12,11 +12,7 @@ public class VotingPaper extends Electors {
 	}
 
 	public VotingPaper(it.vige.labs.gc.vote.VotingPaper votingPaper) {
-		setElectors(getElectors() + 1);
-		setId(votingPaper.getId());
-		Group gr = new Group(votingPaper);
-		if (!groups.containsKey(gr.getId()))
-			groups.put(gr.getId(), gr);
+		add(votingPaper);
 	}
 
 	public Map<Integer, Group> getGroups() {
@@ -25,5 +21,17 @@ public class VotingPaper extends Electors {
 
 	public void setGroups(Map<Integer, Group> groups) {
 		this.groups = groups;
+	}
+
+	public void add(it.vige.labs.gc.vote.VotingPaper votingPaper) {
+		setElectors(getElectors() + 1);
+		setId(votingPaper.getId());
+		it.vige.labs.gc.vote.Group group = votingPaper.getGroup();
+		if (group == null && votingPaper.getParty() != null)
+			groups.put(0, new Group(votingPaper));
+		else if (!groups.containsKey(group.getId()))
+			groups.put(group.getId(), new Group(votingPaper));
+		else
+			groups.get(group.getId()).add(votingPaper);
 	}
 }

@@ -9,6 +9,14 @@ public class VotingPapers extends Electors {
 
 	private Map<Integer, VotingPaper> votingPapers = new HashMap<Integer, VotingPaper>();
 
+	public VotingPapers() {
+
+	}
+
+	public VotingPapers(Vote vote) {
+		add(vote);
+	}
+
 	public Map<Integer, VotingPaper> getVotingPapers() {
 		return votingPapers;
 	}
@@ -20,9 +28,10 @@ public class VotingPapers extends Electors {
 	public void add(Vote vote) {
 		setElectors(getElectors() + 1);
 		vote.getVotingPapers().forEach(e -> {
-			VotingPaper vt = new VotingPaper(e);
-			if (!votingPapers.containsKey(vt.getId()))
-				votingPapers.put(vt.getId(), vt);
+			if (!votingPapers.containsKey(e.getId()))
+				votingPapers.put(e.getId(), new VotingPaper(e));
+			else
+				votingPapers.get(e.getId()).add(e);
 		});
 	}
 

@@ -14,20 +14,17 @@ import it.vige.labs.gc.vote.Vote;
 @RestController
 @CrossOrigin(origins = "*")
 public class VoteController {
-	
+
 	private VotingPapers result = new VotingPapers();
 
 	@Autowired
 	private Validator validator;
 
-	@Autowired
-	private UpdateResult updateResult;
-
 	@PostMapping(value = "/vote")
 	public Messages vote(@RequestBody Vote vote) {
 		Messages messages = validator.validate(vote);
-		result.add(vote);
-		//updateResult.execute(vote, result);
+		if (messages.isOk())
+			result.add(vote);
 		return messages;
 	}
 
