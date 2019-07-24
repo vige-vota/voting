@@ -1,11 +1,11 @@
 package it.vige.labs.gc.result;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Group extends Electors {
 
-	private List<Party> parties = new ArrayList<Party>();
+	private Map<Integer, Party> parties = new HashMap<Integer, Party>();
 
 	private boolean empty;
 
@@ -15,15 +15,18 @@ public class Group extends Electors {
 
 	public Group(it.vige.labs.gc.vote.VotingPaper votingPaper) {
 		setElectors(getElectors() + 1);
-		setId(votingPaper.getGroup().getId());
-		parties.add(new Party(votingPaper.getParty()));
+		if (votingPaper.getGroup() != null)
+			setId(votingPaper.getGroup().getId());
+		Party pt = new Party(votingPaper.getParty());
+		if (!parties.containsKey(pt.getId()))
+			parties.put(pt.getId(), pt);
 	}
 
-	public List<Party> getParties() {
+	public Map<Integer, Party> getParties() {
 		return parties;
 	}
 
-	public void setParties(List<Party> parties) {
+	public void setParties(Map<Integer, Party> parties) {
 		this.parties = parties;
 	}
 

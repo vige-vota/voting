@@ -64,11 +64,13 @@ public class VoteTest {
 
 		VotingPapers votingPapers = voteController.getResult();
 		Assert.assertTrue(votingPapers.getElectors() >= 1);
-		Assert.assertTrue(votingPapers.getVotingPapers().size() >= 4);
+		Assert.assertTrue(votingPapers.getVotingPapers().size() == 4);
 		Assert.assertTrue(votingPapers.getVotingPapers().stream().allMatch(e -> e.getElectors() >= 1));
 		votingPapers.getVotingPapers().stream().forEach(e -> {
 			Assert.assertTrue(e.getId() == 0 || e.getId() == 11 || e.getId() == 86 || e.getId() == 121);
 			if (e.getId() == 0) {
+				System.out.println(e.getGroups());
+				System.out.println(e.getGroups().size());
 				Assert.assertTrue(e.getGroups().stream().filter(f -> f.getId() == 5).findFirst().get().getElectors() >= 1);
 				Assert.assertTrue(e.getGroups().stream()
 						.flatMap(f -> Arrays.stream(f.getParties().toArray(new it.vige.labs.gc.result.Party[0])))
