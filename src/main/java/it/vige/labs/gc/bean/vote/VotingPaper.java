@@ -58,7 +58,7 @@ public class VotingPaper extends Validation {
 					parties = group.validate(i, results, groups, parties, votingPaperFromJson, party);
 				else if (!votingPaperFromJson.isDisjointed() && votingPaperFromJson.getGroups().size() > 1)
 					results[i] = false;
-				else if (validateParty(parties, party, votingPaperFromJson.getMaxCandidates()))
+				else if (validateExisting(parties, party, votingPaperFromJson.getMaxCandidates()))
 					results[i] = true;
 			}
 		}

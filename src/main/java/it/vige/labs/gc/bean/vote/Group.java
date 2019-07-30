@@ -26,7 +26,7 @@ public class Group extends Validation {
 				results[i] = false;
 		}
 		if (groups.parallelStream().anyMatch(e -> e.getId() == id)
-				&& validateParty(parties, party, votingPaperFromJson.getMaxCandidates()))
+				&& validateExisting(parties, party, votingPaperFromJson.getMaxCandidates()))
 			results[i] = true;
 		return parties;
 	}

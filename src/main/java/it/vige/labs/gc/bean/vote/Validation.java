@@ -12,7 +12,7 @@ public class Validation extends Identifier {
 		super(id);
 	}
 
-	public boolean validateParty(List<it.vige.labs.gc.bean.votingpapers.Party> parties, Party party,
+	public boolean validateExisting(List<it.vige.labs.gc.bean.votingpapers.Party> parties, Party party,
 			int maxCandidates) {
 		if (party != null)
 			return party.validate(parties, maxCandidates);
