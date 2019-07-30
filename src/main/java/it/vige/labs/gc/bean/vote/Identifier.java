@@ -2,7 +2,7 @@ package it.vige.labs.gc.bean.vote;
 
 public class Identifier {
 
-	private int id;
+	protected int id;
 
 	public Identifier() {
 	}

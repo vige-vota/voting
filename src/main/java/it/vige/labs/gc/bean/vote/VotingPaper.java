@@ -1,9 +1,14 @@
 package it.vige.labs.gc.bean.vote;
 
-public class VotingPaper extends Identifier {
+import java.util.List;
+import java.util.stream.Collectors;
+
+import it.vige.labs.gc.bean.votingpapers.VotingPapers;
+
+public class VotingPaper extends Validation {
 
 	private Party party;
-	
+
 	private Group group;
 
 	public VotingPaper() {
@@ -35,5 +40,27 @@ public class VotingPaper extends Identifier {
 
 	public void setGroup(Group group) {
 		this.group = group;
+	}
+
+	public void validate(VotingPapers votingPapers, int i, Boolean[] results) {
+		if (group == null && party == null)
+			results[i] = false;
+		else {
+			it.vige.labs.gc.bean.votingpapers.VotingPaper votingPaperFromJson = votingPapers.getVotingPapers()
+					.parallelStream().filter(e -> e.getId() == id).collect(Collectors.toList()).get(0);
+			if (id == votingPaperFromJson.getId()) {
+				List<it.vige.labs.gc.bean.votingpapers.Group> groups = votingPapers.getVotingPapers().parallelStream()
+						.filter(e -> e.getId() == id).collect(Collectors.toList()).get(0).getGroups();
+
+				List<it.vige.labs.gc.bean.votingpapers.Party> parties = groups.parallelStream()
+						.flatMap(e -> e.getParties().parallelStream()).collect(Collectors.toList());
+				if (group != null)
+					parties = group.validate(i, results, groups, parties, votingPaperFromJson, party);
+				else if (!votingPaperFromJson.isDisjointed() && votingPaperFromJson.getGroups().size() > 1)
+					results[i] = false;
+				else if (validateParty(parties, party, votingPaperFromJson.getMaxCandidates()))
+					results[i] = true;
+			}
+		}
 	}
 }
