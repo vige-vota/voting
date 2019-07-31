@@ -1,11 +1,15 @@
 package it.vige.labs.gc.bean.result;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class Group extends Electors {
 
-	private Map<Integer, Party> parties = new HashMap<Integer, Party>();
+	@JsonIgnore
+	private Map<Integer, Party> mapParties = new HashMap<Integer, Party>();
 
 	private boolean empty;
 
@@ -17,12 +21,16 @@ public class Group extends Electors {
 		add(votingPaper);
 	}
 
-	public Map<Integer, Party> getParties() {
-		return parties;
+	public Map<Integer, Party> getMapParties() {
+		return mapParties;
 	}
 
-	public void setParties(Map<Integer, Party> parties) {
-		this.parties = parties;
+	public Collection<Party> getParties() {
+		return mapParties.values();
+	}
+
+	public void setMapParties(Map<Integer, Party> mapParties) {
+		this.mapParties = mapParties;
 	}
 
 	public boolean isEmpty() {
@@ -40,10 +48,10 @@ public class Group extends Electors {
 		if (votingPaper.getParty() != null) {
 			if (votingPaper.getGroup() == null)
 				setEmpty(true);
-			if (!parties.containsKey(votingPaper.getParty().getId()))
-				parties.put(votingPaper.getParty().getId(), new Party(votingPaper.getParty()));
+			if (!mapParties.containsKey(votingPaper.getParty().getId()))
+				mapParties.put(votingPaper.getParty().getId(), new Party(votingPaper.getParty()));
 			else
-				parties.get(votingPaper.getParty().getId()).add(votingPaper.getParty());
+				mapParties.get(votingPaper.getParty().getId()).add(votingPaper.getParty());
 		}
 	}
 

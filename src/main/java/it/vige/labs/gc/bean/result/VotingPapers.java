@@ -1,13 +1,17 @@
 package it.vige.labs.gc.bean.result;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import it.vige.labs.gc.bean.vote.Vote;
 
 public class VotingPapers extends Electors {
 
-	private Map<Integer, VotingPaper> votingPapers = new HashMap<Integer, VotingPaper>();
+	@JsonIgnore
+	private Map<Integer, VotingPaper> mapVotingPapers = new HashMap<Integer, VotingPaper>();
 
 	public VotingPapers() {
 
@@ -17,21 +21,25 @@ public class VotingPapers extends Electors {
 		add(vote);
 	}
 
-	public Map<Integer, VotingPaper> getVotingPapers() {
-		return votingPapers;
+	public Map<Integer, VotingPaper> getMapVotingPapers() {
+		return mapVotingPapers;
 	}
 
-	public void setVotingPapers(Map<Integer, VotingPaper> votingPapers) {
-		this.votingPapers = votingPapers;
+	public Collection<VotingPaper> getVotingPapers() {
+		return mapVotingPapers.values();
+	}
+
+	public void setMapVotingPapers(Map<Integer, VotingPaper> mapVotingPapers) {
+		this.mapVotingPapers = mapVotingPapers;
 	}
 
 	public void add(Vote vote) {
 		setElectors(getElectors() + 1);
 		vote.getVotingPapers().forEach(e -> {
-			if (!votingPapers.containsKey(e.getId()))
-				votingPapers.put(e.getId(), new VotingPaper(e));
+			if (!mapVotingPapers.containsKey(e.getId()))
+				mapVotingPapers.put(e.getId(), new VotingPaper(e));
 			else
-				votingPapers.get(e.getId()).add(e);
+				mapVotingPapers.get(e.getId()).add(e);
 		});
 	}
 

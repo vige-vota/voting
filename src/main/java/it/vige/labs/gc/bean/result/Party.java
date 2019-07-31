@@ -1,11 +1,15 @@
 package it.vige.labs.gc.bean.result;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class Party extends Electors {
 
-	private Map<Integer, Candidate> candidates = new HashMap<Integer, Candidate>();
+	@JsonIgnore
+	private Map<Integer, Candidate> mapCandidates = new HashMap<Integer, Candidate>();
 
 	public Party() {
 
@@ -15,12 +19,16 @@ public class Party extends Electors {
 		add(party);
 	}
 
-	public Map<Integer, Candidate> getCandidates() {
-		return candidates;
+	public Map<Integer, Candidate> getMapCandidates() {
+		return mapCandidates;
 	}
 
-	public void setCandidates(Map<Integer, Candidate> candidates) {
-		this.candidates = candidates;
+	public Collection<Candidate> getCandidates() {
+		return mapCandidates.values();
+	}
+
+	public void setMapCandidates(Map<Integer, Candidate> mapCandidates) {
+		this.mapCandidates = mapCandidates;
 	}
 
 	public void add(it.vige.labs.gc.bean.vote.Party party) {
@@ -29,10 +37,10 @@ public class Party extends Electors {
 			setId(party.getId());
 			if (party.getCandidates() != null) {
 				party.getCandidates().forEach(e -> {
-					if (!candidates.containsKey(e.getId()))
-						candidates.put(e.getId(), new Candidate(e));
+					if (!mapCandidates.containsKey(e.getId()))
+						mapCandidates.put(e.getId(), new Candidate(e));
 					else
-						candidates.get(e.getId()).add(e);
+						mapCandidates.get(e.getId()).add(e);
 				});
 			}
 		}
