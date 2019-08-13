@@ -35,11 +35,12 @@ public class VotingPaper extends Electors {
 		setElectors(getElectors() + 1);
 		setId(votingPaper.getId());
 		it.vige.labs.gc.bean.vote.Group group = votingPaper.getGroup();
-		if (group == null && votingPaper.getParty() != null)
-			mapGroups.put(0, new Group(votingPaper));
-		else if (!mapGroups.containsKey(group.getId()))
-			mapGroups.put(group.getId(), new Group(votingPaper));
+		int id = 0;
+		if (group != null)
+			id = group.getId();
+		if (!mapGroups.containsKey(id))
+			mapGroups.put(id, new Group(votingPaper));
 		else
-			mapGroups.get(group.getId()).add(votingPaper);
+			mapGroups.get(id).add(votingPaper);
 	}
 }
