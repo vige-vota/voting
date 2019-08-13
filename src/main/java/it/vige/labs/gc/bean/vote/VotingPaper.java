@@ -44,7 +44,7 @@ public class VotingPaper extends Validation {
 
 	public void validate(VotingPapers votingPapers, int i, Boolean[] results) {
 		if (group == null && party == null)
-			results[i] = false;
+			results[i] = true;
 		else {
 			it.vige.labs.gc.bean.votingpapers.VotingPaper votingPaperFromJson = votingPapers.getVotingPapers()
 					.parallelStream().filter(e -> e.getId() == id).collect(Collectors.toList()).get(0);

@@ -1,6 +1,6 @@
 package it.vige.labs.gc.bean.result;
 
-public class Candidate extends Electors {
+public class Candidate extends Votes {
 
 	public Candidate() {
 
@@ -11,7 +11,7 @@ public class Candidate extends Electors {
 	}
 
 	public void add(it.vige.labs.gc.bean.vote.Candidate candidate) {
-		setElectors(getElectors() + 1);
+		setVotes(getVotes() + 1);
 		setId(candidate.getId());
 	}
 }

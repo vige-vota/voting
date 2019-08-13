@@ -6,7 +6,7 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-public class Group extends Electors {
+public class Group extends Votes {
 
 	@JsonIgnore
 	private Map<Integer, Party> mapParties = new HashMap<Integer, Party>();
@@ -42,7 +42,7 @@ public class Group extends Electors {
 	}
 
 	public void add(it.vige.labs.gc.bean.vote.VotingPaper votingPaper) {
-		setElectors(getElectors() + 1);
+		setVotes(getVotes() + 1);
 		if (votingPaper.getGroup() != null)
 			setId(votingPaper.getGroup().getId());
 		if (votingPaper.getParty() != null) {
