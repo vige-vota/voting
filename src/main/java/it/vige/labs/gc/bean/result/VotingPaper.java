@@ -13,6 +13,8 @@ public class VotingPaper extends Electors {
 
 	@JsonIgnore
 	private Map<Integer, Party> mapParties = new HashMap<Integer, Party>();
+	
+	private int blankPapers;
 
 	public VotingPaper() {
 
@@ -20,6 +22,14 @@ public class VotingPaper extends Electors {
 
 	public VotingPaper(it.vige.labs.gc.bean.vote.VotingPaper votingPaper) {
 		add(votingPaper);
+	}
+
+	public int getBlankPapers() {
+		return blankPapers;
+	}
+
+	public void setBlankPapers(int blankPapers) {
+		this.blankPapers = blankPapers;
 	}
 
 	public Map<Integer, Group> getMapGroups() {
@@ -65,5 +75,7 @@ public class VotingPaper extends Electors {
 			else
 				mapParties.get(id).add(party);
 		}
+		if (group == null && party == null)
+			blankPapers++;
 	}
 }

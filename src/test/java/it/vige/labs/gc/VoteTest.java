@@ -82,6 +82,7 @@ public class VoteTest {
 						.flatMap(f -> Arrays.stream(
 								f.getMapCandidates().values().toArray(new it.vige.labs.gc.bean.result.Candidate[0])))
 						.count() == 0);
+				Assert.assertEquals("no blank papers", 0, e.getBlankPapers());
 			}
 			if (e.getId() == 11) {
 				Assert.assertTrue(e.getMapGroups().values().stream().filter(f -> f.getId() == 12).findFirst().get()
@@ -108,6 +109,7 @@ public class VoteTest {
 						.flatMap(f -> Arrays.stream(
 								f.getMapCandidates().values().toArray(new it.vige.labs.gc.bean.result.Candidate[0])))
 						.allMatch(f -> f.getElectors() == 1));
+				Assert.assertEquals("no blank papers", 0, e.getBlankPapers());
 			}
 			if (e.getId() == 86) {
 				Assert.assertTrue(e.getMapGroups().values().stream().filter(f -> f.getId() == 93).findFirst().get()
@@ -122,6 +124,7 @@ public class VoteTest {
 						.flatMap(f -> Arrays.stream(
 								f.getMapCandidates().values().toArray(new it.vige.labs.gc.bean.result.Candidate[0])))
 						.count() == 0);
+				Assert.assertEquals("no blank papers", 0, e.getBlankPapers());
 			}
 			if (e.getId() == 121) {
 				Assert.assertTrue(e.getMapGroups().isEmpty());
@@ -139,6 +142,7 @@ public class VoteTest {
 						.flatMap(f -> Arrays.stream(
 								f.getMapCandidates().values().toArray(new it.vige.labs.gc.bean.result.Candidate[0])))
 						.allMatch(f -> f.getElectors() == 1));
+				Assert.assertEquals("no blank papers", 0, e.getBlankPapers());
 			}
 		});
 	}
@@ -180,6 +184,7 @@ public class VoteTest {
 						.flatMap(f -> Arrays
 								.stream(f.getMapParties().values().toArray(new it.vige.labs.gc.bean.result.Party[0])))
 						.count() == 0);
+				Assert.assertEquals("no blank papers", 0, e.getBlankPapers());
 			}
 		});
 
@@ -224,6 +229,7 @@ public class VoteTest {
 						.flatMap(f -> Arrays
 								.stream(f.getMapParties().values().toArray(new it.vige.labs.gc.bean.result.Party[0])))
 						.count() == 0);
+				Assert.assertEquals("no blank papers", 0, e.getBlankPapers());
 			}
 		});
 
@@ -265,6 +271,7 @@ public class VoteTest {
 						.flatMap(f -> Arrays.stream(
 								f.getMapCandidates().values().toArray(new it.vige.labs.gc.bean.result.Candidate[0])))
 						.allMatch(f -> f.getElectors() == 1));
+				Assert.assertEquals("no blank papers", 0, e.getBlankPapers());
 			}
 		});
 	}
@@ -379,6 +386,7 @@ public class VoteTest {
 						.flatMap(f -> Arrays.stream(
 								f.getMapCandidates().values().toArray(new it.vige.labs.gc.bean.result.Candidate[0])))
 						.allMatch(f -> f.getElectors() == 1));
+				Assert.assertEquals("no blank papers", 0, e.getBlankPapers());
 			}
 		});
 
