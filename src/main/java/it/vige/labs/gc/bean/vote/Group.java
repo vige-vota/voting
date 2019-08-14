@@ -13,7 +13,7 @@ public class Group extends Validation {
 		super(id);
 	}
 
-	public List<it.vige.labs.gc.bean.votingpapers.Party> validate(int i, Boolean[] results,
+	public void validate(int i, Boolean[] results,
 			List<it.vige.labs.gc.bean.votingpapers.Group> groups, List<it.vige.labs.gc.bean.votingpapers.Party> parties,
 			it.vige.labs.gc.bean.votingpapers.VotingPaper votingPaperFromJson, Party party) {
 		if (!votingPaperFromJson.isDisjointed()) {
@@ -28,7 +28,6 @@ public class Group extends Validation {
 		if (groups.parallelStream().anyMatch(e -> e.getId() == id)
 				&& validateExisting(parties, party, votingPaperFromJson.getMaxCandidates()))
 			results[i] = true;
-		return parties;
 	}
 
 }

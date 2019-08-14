@@ -7,10 +7,10 @@ import it.vige.labs.gc.bean.votingpapers.VotingPapers;
 public class Vote {
 
 	private List<VotingPaper> votingPapers;
-	
+
 	public Vote() {
 	}
-	
+
 	public Vote(List<VotingPaper> votingPapers) {
 		this.votingPapers = votingPapers;
 	}
@@ -22,11 +22,13 @@ public class Vote {
 	public void setVotingPapers(List<VotingPaper> votingPapers) {
 		this.votingPapers = votingPapers;
 	}
-	
+
 	public void validate(Boolean[] results, VotingPapers votingPapers) {
 		int i = 0;
-		for (VotingPaper votingPaper : getVotingPapers()) {
-			votingPaper.validate(votingPapers, i++, results);
-		}
+		List<VotingPaper> votingPapersFromVote = getVotingPapers();
+		if (votingPapersFromVote.size() == votingPapers.getVotingPapers().size() && !votingPapersFromVote.isEmpty())
+			for (VotingPaper votingPaper : votingPapersFromVote) {
+				votingPaper.validate(votingPapers, i++, results);
+			}
 	}
 }

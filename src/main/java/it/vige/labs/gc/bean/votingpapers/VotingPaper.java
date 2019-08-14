@@ -11,6 +11,8 @@ public class VotingPaper extends Identifier {
 	private boolean disjointed;
 	
 	private List<Group> groups;
+	
+	private List<Party> parties;
 
 	public int getMaxCandidates() {
 		return maxCandidates;
@@ -34,5 +36,13 @@ public class VotingPaper extends Identifier {
 
 	public void setGroups(List<Group> groups) {
 		this.groups = groups;
+	}
+
+	public List<Party> getParties() {
+		return parties;
+	}
+
+	public void setParties(List<Party> parties) {
+		this.parties = parties;
 	}
 }

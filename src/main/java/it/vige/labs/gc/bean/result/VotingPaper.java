@@ -34,6 +34,18 @@ public class VotingPaper extends Electors {
 		this.mapGroups = mapGroups;
 	}
 
+	public Map<Integer, Party> getMapParties() {
+		return mapParties;
+	}
+
+	public Collection<Party> getParties() {
+		return mapParties.values();
+	}
+
+	public void setMapParties(Map<Integer, Party> mapParties) {
+		this.mapParties = mapParties;
+	}
+
 	public void add(it.vige.labs.gc.bean.vote.VotingPaper votingPaper) {
 		setElectors(getElectors() + 1);
 		setId(votingPaper.getId());

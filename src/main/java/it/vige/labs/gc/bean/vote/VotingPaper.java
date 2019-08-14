@@ -15,6 +15,10 @@ public class VotingPaper extends Validation {
 		super();
 	}
 
+	public VotingPaper(int id) {
+		super(id);
+	}
+
 	public VotingPaper(int id, Party party) {
 		super(id);
 		this.party = party;
@@ -49,17 +53,22 @@ public class VotingPaper extends Validation {
 			it.vige.labs.gc.bean.votingpapers.VotingPaper votingPaperFromJson = votingPapers.getVotingPapers()
 					.parallelStream().filter(e -> e.getId() == id).collect(Collectors.toList()).get(0);
 			if (id == votingPaperFromJson.getId()) {
-				List<it.vige.labs.gc.bean.votingpapers.Group> groups = votingPapers.getVotingPapers().parallelStream()
-						.filter(e -> e.getId() == id).collect(Collectors.toList()).get(0).getGroups();
+				List<it.vige.labs.gc.bean.votingpapers.Group> groups = votingPaperFromJson.getGroups();
 
-				List<it.vige.labs.gc.bean.votingpapers.Party> parties = groups.parallelStream()
-						.flatMap(e -> e.getParties().parallelStream()).collect(Collectors.toList());
-				if (group != null)
-					parties = group.validate(i, results, groups, parties, votingPaperFromJson, party);
-				else if (!votingPaperFromJson.isDisjointed() && votingPaperFromJson.getGroups().size() > 1)
-					results[i] = false;
-				else if (validateExisting(parties, party, votingPaperFromJson.getMaxCandidates()))
-					results[i] = true;
+				if (groups != null) {
+					List<it.vige.labs.gc.bean.votingpapers.Party> parties = groups.parallelStream()
+							.flatMap(e -> e.getParties().parallelStream()).collect(Collectors.toList());
+					if (group != null)
+						group.validate(i, results, groups, parties, votingPaperFromJson, party);
+					else if (!votingPaperFromJson.isDisjointed())
+						results[i] = false;
+					else if (validateExisting(parties, party, votingPaperFromJson.getMaxCandidates()))
+						results[i] = true;
+				}
+
+				List<it.vige.labs.gc.bean.votingpapers.Party> parties = votingPaperFromJson.getParties();
+				if (parties != null)
+					results[i] = validateExisting(parties, party, votingPaperFromJson.getMaxCandidates());
 			}
 		}
 	}
