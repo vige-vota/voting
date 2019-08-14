@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import it.vige.labs.gc.bean.vote.Vote;
 
-public class VotingPapers extends Electors {
+public class VotingPapers extends TotalElectors {
 
 	@JsonIgnore
 	private Map<Integer, VotingPaper> mapVotingPapers = new HashMap<Integer, VotingPaper>();
