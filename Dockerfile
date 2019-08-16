@@ -13,7 +13,6 @@
 FROM openjdk:12.0.1-jdk
 EXPOSE 8443
 RUN yum -y update && \
-	yum -y install sudo mongodb-server && \
     echo "%wheel ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
     useradd -u 1000 -G users,wheel -d /home/votinguser --shell /bin/bash -m votinguser && \
     echo "votinguser:secret" | chpasswd && \
@@ -32,11 +31,7 @@ RUN cd vota && ./gradlew build -x test
 RUN rm -Rf /home/votinguser/.gradle && \
 	mv /workspace/vota/build/libs/voting*.jar /workspace/vota.jar && \
 	rm -Rf /workspace/vota && \
-	mkdir /workspace/mongodb && \
-	echo "nohup /usr/bin/mongod --dbpath /workspace/mongodb &" > /workspace/start_mongo.sh && \
-	chmod 775 /workspace/start_mongo.sh && \
     keytool -genkey -alias tomcat -storetype PKCS12 -keyalg RSA -keysize 2048 -keystore /workspace/keystore.p12 -validity 3650 -dname "CN=backend.vota.vige.it, OU=Vige, O=Vige, L=Rome, S=Italy, C=IT" -storepass secret -keypass secret
 
-CMD /workspace/start_mongo.sh && \
-	java -jar /workspace/vota.jar --server.port=8443 --server.ssl.key-store=/workspace/keystore.p12 --server.ssl.key-store-password=secret --server.ssl.keyStoreType=PKCS12 --server.ssl.keyAlias=tomcat --spring.profiles.active=prod && \
+CMD java -jar /workspace/vota.jar --server.port=8443 --server.ssl.key-store=/workspace/keystore.p12 --server.ssl.key-store-password=secret --server.ssl.keyStoreType=PKCS12 --server.ssl.keyAlias=tomcat --spring.profiles.active=prod && \
 	tail -f /dev/null

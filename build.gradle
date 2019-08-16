@@ -10,15 +10,10 @@ buildscript {
     }
 }
 
-plugins {
-  id 'com.sourcemuse.mongo' version '1.0.7'
-}
-
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
-apply plugin: 'com.sourcemuse.mongo'
 
 group = 'it.vige'
 version = '1.0.0-SNAPSHOT'
@@ -30,14 +25,9 @@ repositories {
 
 dependencies {
     implementation('org.springframework.boot:spring-boot-starter-web')
-    implementation('org.springframework.boot:spring-boot-starter-data-mongodb')
     implementation('org.springframework.boot:spring-boot-starter-data-rest')
     implementation('io.springfox:springfox-swagger2:2.9.2')
     implementation('io.springfox:springfox-swagger-ui:2.9.2')
     implementation('org.apache.httpcomponents:httpclient:4.5.9')
     testImplementation('org.springframework.boot:spring-boot-starter-test')
-}
-
-task integrationTest(type: Test) {
-    runWithMongoDb = true
 }
