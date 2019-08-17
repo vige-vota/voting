@@ -13,6 +13,7 @@
 FROM openjdk:12.0.1-jdk
 EXPOSE 8443
 RUN yum -y update && \
+	yum -y install sudo && \
     echo "%wheel ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
     useradd -u 1000 -G users,wheel -d /home/votinguser --shell /bin/bash -m votinguser && \
     echo "votinguser:secret" | chpasswd && \
