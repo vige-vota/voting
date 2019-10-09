@@ -63,7 +63,7 @@ public class VoteTest {
 				messages.getMessages().toArray());
 		Assert.assertTrue(messages.isOk());
 
-		VotingPapers votingPapers = voteController.getResult(new VoteRequest(vote, new VotingPapers()));
+		VotingPapers votingPapers = voteController.getResult(new VoteRequest(vote, new VotingPapers())).getVotings().get(0);
 		Assert.assertTrue(votingPapers.getElectors() == 1);
 		Assert.assertTrue(votingPapers.getMapVotingPapers().size() == 4);
 		Assert.assertTrue(votingPapers.getMapVotingPapers().values().stream().allMatch(e -> e.getElectors() == 1));
@@ -170,7 +170,7 @@ public class VoteTest {
 				messages.getMessages().toArray());
 		Assert.assertTrue(messages.isOk());
 
-		VotingPapers votingPapers = voteController.getResult(new VoteRequest(vote, new VotingPapers()));
+		VotingPapers votingPapers = voteController.getResult(new VoteRequest(vote, new VotingPapers())).getVotings().get(0);
 		Assert.assertTrue(votingPapers.getElectors() == 1);
 		Assert.assertTrue(votingPapers.getMapVotingPapers().size() == 4);
 		Assert.assertTrue(votingPapers.getMapVotingPapers().values().stream().allMatch(e -> e.getElectors() == 1));
@@ -215,7 +215,7 @@ public class VoteTest {
 				messages.getMessages().toArray());
 		Assert.assertTrue(messages.isOk());
 
-		votingPapers = voteController.getResult(new VoteRequest(vote, new VotingPapers()));
+		votingPapers = voteController.getResult(new VoteRequest(vote, new VotingPapers())).getVotings().get(0);
 		Assert.assertTrue(votingPapers.getElectors() == 1);
 		Assert.assertTrue(votingPapers.getMapVotingPapers().size() == 4);
 		Assert.assertTrue(votingPapers.getMapVotingPapers().values().stream().allMatch(e -> e.getElectors() == 1));
@@ -248,7 +248,7 @@ public class VoteTest {
 				Validator.defaultMessage.getMessages().toArray(), messages.getMessages().toArray());
 		Assert.assertTrue(messages.isOk());
 
-		votingPapers = voteController.getResult(new VoteRequest(vote, new VotingPapers()));
+		votingPapers = voteController.getResult(new VoteRequest(vote, new VotingPapers())).getVotings().get(0);
 		Assert.assertTrue(votingPapers.getElectors() == 1);
 		Assert.assertTrue(votingPapers.getMapVotingPapers().size() == 4);
 		Assert.assertTrue(votingPapers.getMapVotingPapers().values().stream().allMatch(e -> e.getElectors() == 1));
@@ -354,7 +354,7 @@ public class VoteTest {
 				messages.getMessages().toArray());
 		Assert.assertTrue(messages.isOk());
 
-		VotingPapers votingPapers = voteController.getResult(new VoteRequest(vote, new VotingPapers()));
+		VotingPapers votingPapers = voteController.getResult(new VoteRequest(vote, new VotingPapers())).getVotings().get(0);
 		Assert.assertTrue(votingPapers.getElectors() == 1);
 		Assert.assertTrue(votingPapers.getMapVotingPapers().size() == 4);
 		Assert.assertTrue(votingPapers.getMapVotingPapers().values().stream().allMatch(e -> e.getElectors() == 1));

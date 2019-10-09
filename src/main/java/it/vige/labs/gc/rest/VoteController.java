@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import it.vige.labs.gc.bean.VoteRequest;
 import it.vige.labs.gc.bean.result.VotingPapers;
+import it.vige.labs.gc.bean.result.Votings;
 import it.vige.labs.gc.bean.vote.Vote;
 import it.vige.labs.gc.messages.Messages;
 
@@ -30,15 +31,19 @@ public class VoteController {
 	}
 
 	@GetMapping(value = "/result")
-	public VotingPapers getResult() {
-		return result;
+	public Votings getResult() {
+		Votings votings = new Votings();
+		votings.getVotings().add(result);
+		return votings;
 	}
 
 	@PostMapping(value = "/result")
-	public VotingPapers getResult(@RequestBody VoteRequest voteRequest) {
+	public Votings getResult(@RequestBody VoteRequest voteRequest) {
 		Vote vote = voteRequest.getVote();
 		VotingPapers votingPaper = voteRequest.getVotingPapers();
 		votingPaper.add(vote);
-		return votingPaper;
+		Votings votings = new Votings();
+		votings.getVotings().add(votingPaper);
+		return votings;
 	}
 }
