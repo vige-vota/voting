@@ -19,6 +19,9 @@ import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
 public class JavaAppApplication {
+	
+	public final static String BROKER_NAME = "/vote-websocket";
+	public final static String TOPIC_NAME = "/topic/vote";
 
 	@Bean
 	public RestTemplate restTemplate() throws KeyStoreException, NoSuchAlgorithmException, KeyManagementException {

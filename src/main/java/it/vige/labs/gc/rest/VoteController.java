@@ -7,11 +7,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import it.vige.labs.gc.JavaAppApplication;
 import it.vige.labs.gc.bean.VoteRequest;
 import it.vige.labs.gc.bean.result.VotingPapers;
 import it.vige.labs.gc.bean.result.Votings;
 import it.vige.labs.gc.bean.vote.Vote;
 import it.vige.labs.gc.messages.Messages;
+import it.vige.labs.gc.websocket.WebSocketClient;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -20,13 +22,18 @@ public class VoteController {
 	private VotingPapers result = new VotingPapers();
 
 	@Autowired
+	private WebSocketClient webSocketClient;
+
+	@Autowired
 	private Validator validator;
 
 	@PostMapping(value = "/vote")
-	public Messages vote(@RequestBody Vote vote) {
+	public Messages vote(@RequestBody Vote vote) throws Exception {
 		Messages messages = validator.validate(vote);
-		if (messages.isOk())
+		if (messages.isOk()) {
 			result.add(vote);
+			webSocketClient.getStompSession().send(JavaAppApplication.TOPIC_NAME, getResult());
+		}
 		return messages;
 	}
 

@@ -33,7 +33,7 @@ public class VoteTest {
 	private VoteController voteController;
 
 	@Test
-	public void voteOk() {
+	public void voteOk() throws Exception {
 
 		Party pd = new Party(3);
 		Group michelBarbet = new Group(5);
@@ -63,7 +63,8 @@ public class VoteTest {
 				messages.getMessages().toArray());
 		Assert.assertTrue(messages.isOk());
 
-		VotingPapers votingPapers = voteController.getResult(new VoteRequest(vote, new VotingPapers())).getVotings().get(0);
+		VotingPapers votingPapers = voteController.getResult(new VoteRequest(vote, new VotingPapers())).getVotings()
+				.get(0);
 		Assert.assertTrue(votingPapers.getElectors() == 1);
 		Assert.assertTrue(votingPapers.getMapVotingPapers().size() == 4);
 		Assert.assertTrue(votingPapers.getMapVotingPapers().values().stream().allMatch(e -> e.getElectors() == 1));
@@ -148,7 +149,7 @@ public class VoteTest {
 	}
 
 	@Test
-	public void onlySelection() {
+	public void onlySelection() throws Exception {
 
 		Group matteoSalvini = new Group(95);
 		VotingPaper nazionali = new VotingPaper(86, null, matteoSalvini);
@@ -170,7 +171,8 @@ public class VoteTest {
 				messages.getMessages().toArray());
 		Assert.assertTrue(messages.isOk());
 
-		VotingPapers votingPapers = voteController.getResult(new VoteRequest(vote, new VotingPapers())).getVotings().get(0);
+		VotingPapers votingPapers = voteController.getResult(new VoteRequest(vote, new VotingPapers())).getVotings()
+				.get(0);
 		Assert.assertTrue(votingPapers.getElectors() == 1);
 		Assert.assertTrue(votingPapers.getMapVotingPapers().size() == 4);
 		Assert.assertTrue(votingPapers.getMapVotingPapers().values().stream().allMatch(e -> e.getElectors() == 1));
@@ -277,7 +279,7 @@ public class VoteTest {
 	}
 
 	@Test
-	public void ids() {
+	public void ids() throws Exception {
 
 		Party giorgiaMeloni = new Party(93);
 		Group matteoSalvini = new Group(95);
@@ -301,7 +303,7 @@ public class VoteTest {
 	}
 
 	@Test
-	public void disjointed() {
+	public void disjointed() throws Exception {
 
 		Party giorgiaMeloni = new Party(95);
 		Group matteoSalvini = new Group(93);
@@ -316,7 +318,7 @@ public class VoteTest {
 	}
 
 	@Test
-	public void candidates() {
+	public void candidates() throws Exception {
 
 		VotingPaper comunali = new VotingPaper(0);
 		VotingPaper regionali = new VotingPaper(11);
@@ -354,7 +356,8 @@ public class VoteTest {
 				messages.getMessages().toArray());
 		Assert.assertTrue(messages.isOk());
 
-		VotingPapers votingPapers = voteController.getResult(new VoteRequest(vote, new VotingPapers())).getVotings().get(0);
+		VotingPapers votingPapers = voteController.getResult(new VoteRequest(vote, new VotingPapers())).getVotings()
+				.get(0);
 		Assert.assertTrue(votingPapers.getElectors() == 1);
 		Assert.assertTrue(votingPapers.getMapVotingPapers().size() == 4);
 		Assert.assertTrue(votingPapers.getMapVotingPapers().values().stream().allMatch(e -> e.getElectors() == 1));
