@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import it.vige.labs.gc.bean.VoteRequest;
@@ -24,7 +25,7 @@ import it.vige.labs.gc.rest.Validator;
 import it.vige.labs.gc.rest.VoteController;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 public class VoteTest {
 
 	private Logger logger = LoggerFactory.getLogger(VoteTest.class);
