@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '2.1.9.RELEASE'
+        springBootVersion = '2.2.1.RELEASE'
     }
     repositories {
         mavenCentral()
@@ -17,7 +17,7 @@ apply plugin: 'io.spring.dependency-management'
 
 group = 'it.vige'
 version = '1.0.0-SNAPSHOT'
-sourceCompatibility = 12
+sourceCompatibility = 13
 
 repositories {
     mavenCentral()
