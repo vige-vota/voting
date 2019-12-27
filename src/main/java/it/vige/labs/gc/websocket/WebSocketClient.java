@@ -1,5 +1,6 @@
 package it.vige.labs.gc.websocket;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.simp.stomp.StompSession;
@@ -20,11 +21,19 @@ public class WebSocketClient {
 	@LocalServerPort
 	private int serverPort;
 
+	@Value("${websocket.scheme}")
+	private String websocketScheme;
+
+	@Value("${voting.host}")
+	private String votingHost;
+
 	private void connect() throws Exception {
 		stompClient.setMessageConverter(new MappingJackson2MessageConverter());
-		stompSession = stompClient.connect("ws://localhost:" + serverPort + JavaAppApplication.BROKER_NAME,
-				new StompSessionHandlerAdapter() {
-				}).get();
+		stompSession = stompClient
+				.connect(websocketScheme + "://" + votingHost + ":" + serverPort + JavaAppApplication.BROKER_NAME,
+						new StompSessionHandlerAdapter() {
+						})
+				.get();
 	}
 
 	public StompSession getStompSession() throws Exception {
