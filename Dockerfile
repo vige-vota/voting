@@ -10,7 +10,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM openjdk:13.0.1-jdk
+FROM openjdk:15.0.1-jdk
 EXPOSE 8443
 RUN yum -y update && \
 	yum -y install sudo && \

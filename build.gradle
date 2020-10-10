@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '2.2.1.RELEASE'
+        springBootVersion = '2.3.4.RELEASE'
     }
     repositories {
         mavenCentral()
@@ -17,7 +17,7 @@ apply plugin: 'io.spring.dependency-management'
 
 group = 'it.vige'
 version = '1.0.0-SNAPSHOT'
-sourceCompatibility = 13
+sourceCompatibility = 15
 
 repositories {
     mavenCentral()
@@ -27,8 +27,7 @@ dependencies {
     implementation('org.springframework.boot:spring-boot-starter-web')
     implementation('org.springframework.boot:spring-boot-starter-data-rest')
     implementation("org.springframework.boot:spring-boot-starter-websocket")
-    implementation('io.springfox:springfox-swagger2:2.9.2')
-    implementation('io.springfox:springfox-swagger-ui:2.9.2')
+    implementation('io.springfox:springfox-boot-starter:3.0.0')
     implementation('org.apache.httpcomponents:httpclient:4.5.10')
     testImplementation('org.springframework.boot:spring-boot-starter-test')
 }
