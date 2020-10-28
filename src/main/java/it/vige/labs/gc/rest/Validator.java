@@ -2,12 +2,12 @@ package it.vige.labs.gc.rest;
 
 import java.util.Arrays;
 
+import org.keycloak.adapters.springsecurity.client.KeycloakRestTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -23,7 +23,7 @@ public class Validator {
 	public final static String ok = "ok";
 
 	@Autowired
-	private RestTemplate restTemplate;
+	private KeycloakRestTemplate restTemplate;
 
 	@Value("${votingpapers.scheme}")
 	private String votingpapersScheme;

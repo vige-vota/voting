@@ -17,7 +17,7 @@ apply plugin: 'io.spring.dependency-management'
 
 group = 'it.vige'
 version = '1.0.0-SNAPSHOT'
-sourceCompatibility = 15
+sourceCompatibility = 13
 
 repositories {
     mavenCentral()
@@ -27,7 +27,9 @@ dependencies {
     implementation('org.springframework.boot:spring-boot-starter-web')
     implementation('org.springframework.boot:spring-boot-starter-data-rest')
     implementation("org.springframework.boot:spring-boot-starter-websocket")
+    implementation('org.springframework.boot:spring-boot-starter-security')
     implementation('io.springfox:springfox-boot-starter:3.0.0')
     implementation('org.apache.httpcomponents:httpclient')
+    implementation('org.keycloak:keycloak-spring-boot-starter:11.0.2')
     testImplementation('org.springframework.boot:spring-boot-starter-test')
 }

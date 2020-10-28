@@ -10,7 +10,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM openjdk:15.0.1-jdk
+FROM openjdk:13.0.1-jdk
 EXPOSE 8443
 RUN yum -y update && \
 	yum -y install sudo && \
@@ -34,5 +34,5 @@ RUN rm -Rf /home/votinguser/.gradle && \
 	rm -Rf /workspace/vota && \
     keytool -genkey -alias tomcat -storetype PKCS12 -keyalg RSA -keysize 2048 -keystore /workspace/keystore.p12 -validity 3650 -dname "CN=vota-voting.vige.it, OU=Vige, O=Vige, L=Rome, S=Italy, C=IT" -storepass secret -keypass secret
 
-CMD java -jar /workspace/vota.jar --server.port=8443 --server.ssl.key-store=/workspace/keystore.p12 --server.ssl.key-store-password=secret --server.ssl.keyStoreType=PKCS12 --server.ssl.keyAlias=tomcat --spring.profiles.active=prod && \
+CMD java -jar /workspace/vota.jar --server.port=8443 --server.ssl.key-store=/workspace/keystore.p12 --server.ssl.key-store-password=secret --server.ssl.keyAlias=tomcat --spring.profiles.active=prod && \
 	tail -f /dev/null
