@@ -24,6 +24,21 @@ $IP_ADDRESS  vota-votingpapers.vige.it
 where in $IP_ADDRESS you must choose the ip address where is located the server
 and open https://vota-voting.vige.it:8443/swagger-ui.html in your browser to connect to the vote application.
 
+## certificates
+
+in a production environment you could move a different ssl certificate and keys. Use this command to generate it:
+```
+keytool -genkey -alias voting -storetype PKCS12 -keyalg RSA -keysize 2048 -keystore ./application.keystore -validity 3650 -dname "CN=vota-voting.vige.it, OU=Vige, O=Vige, L=Rome, S=Italy, C=IT" -storepass password -keypass password
+```
+You need to export the auth certificate and import it through the command:
+```
+keytool -import -alias auth -file ${exported_auth_certificate}.pem -keystore ./application.keystore -storepass password -keypass password
+```
+Same thing for the votingpapers certificate:
+```
+keytool -import -alias votingpapers -file ${exported_votingpapers_certificate}.pem -keystore ./application.keystore -storepass password -keypass password
+```
+
 ## Test
 
 To execute the gradle tests only start before the votingpaper server
