@@ -12,6 +12,7 @@ import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import it.vige.labs.gc.bean.vote.Vote;
+import it.vige.labs.gc.bean.votingpapers.State;
 import it.vige.labs.gc.bean.votingpapers.VotingPapers;
 import it.vige.labs.gc.messages.Message;
 import it.vige.labs.gc.messages.Messages;
@@ -44,6 +45,8 @@ public class Validator {
 
 	public Messages validate(Vote vote) {
 		VotingPapers votingPapers = getVotingPapers();
+		if (votingPapers.getState() == State.PREPARE)
+			return errorMessage;
 		Boolean[] results = new Boolean[vote.getVotingPapers().size()];
 		initResults(results);
 		vote.validate(results, votingPapers);

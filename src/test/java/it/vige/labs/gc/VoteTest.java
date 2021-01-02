@@ -23,11 +23,13 @@ import org.keycloak.adapters.KeycloakDeployment;
 import org.keycloak.adapters.RefreshableKeycloakSecurityContext;
 import org.keycloak.adapters.spi.KeycloakAccount;
 import org.keycloak.adapters.springsecurity.account.SimpleKeycloakAccount;
+import org.keycloak.adapters.springsecurity.client.KeycloakRestTemplate;
 import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
 import org.keycloak.representations.AccessTokenResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.HttpEntity;
@@ -40,6 +42,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import it.vige.labs.gc.bean.VoteRequest;
 import it.vige.labs.gc.bean.result.VotingPapers;
@@ -48,6 +52,7 @@ import it.vige.labs.gc.bean.vote.Group;
 import it.vige.labs.gc.bean.vote.Party;
 import it.vige.labs.gc.bean.vote.Vote;
 import it.vige.labs.gc.bean.vote.VotingPaper;
+import it.vige.labs.gc.bean.votingpapers.State;
 import it.vige.labs.gc.messages.Messages;
 import it.vige.labs.gc.rest.Validator;
 import it.vige.labs.gc.rest.VoteController;
@@ -61,6 +66,20 @@ public class VoteTest {
 
 	@Autowired
 	private VoteController voteController;
+
+	@Autowired
+	private KeycloakRestTemplate restTemplate;
+
+	@Value("${votingpapers.scheme}")
+	private String votingpapersScheme;
+
+	@Value("${votingpapers.host}")
+	private String votingpapersHost;
+
+	@Value("${votingpapers.port}")
+	private int votingpapersPort;
+
+	private static String token;
 
 	private static Principal principal = new Principal() {
 
@@ -87,12 +106,13 @@ public class VoteTest {
 		});
 		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
 		map.add(GRANT_TYPE, CLIENT_CREDENTIALS);
-		
+
 		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, headers);
 		RestTemplate restTemplate = new RestTemplate();
 		String url = deployment.getTokenUrl();
-		ResponseEntity<AccessTokenResponse> response = restTemplate.exchange(url, HttpMethod.POST, request, AccessTokenResponse.class, reqParams);
-		String token = response.getBody().getToken();
+		ResponseEntity<AccessTokenResponse> response = restTemplate.exchange(url, HttpMethod.POST, request,
+				AccessTokenResponse.class, reqParams);
+		token = response.getBody().getToken();
 
 		RefreshableKeycloakSecurityContext securityContext = new RefreshableKeycloakSecurityContext(null, null, token,
 				null, null, null, null);
@@ -100,9 +120,19 @@ public class VoteTest {
 		SecurityContextHolder.getContext().setAuthentication(new KeycloakAuthenticationToken(account, true));
 	}
 
+	private void setState(State state) {
+		UriComponents uriComponents = UriComponentsBuilder.newInstance().scheme(votingpapersScheme)
+				.host(votingpapersHost).port(votingpapersPort).path("/state?state="+state).buildAndExpand();
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Authorization", "Bearer " + token);
+		HttpEntity<?> request = new HttpEntity<>(headers);
+		restTemplate.exchange(uriComponents.toString(), HttpMethod.GET, request, Messages.class);
+	}
+
 	@Test
 	public void voteOk() throws Exception {
 
+		setState(State.VOTE);
 		Party pd = new Party(3);
 		Group michelBarbet = new Group(5);
 		VotingPaper comunali = new VotingPaper(0, pd, michelBarbet);
@@ -214,11 +244,13 @@ public class VoteTest {
 				Assert.assertEquals("no blank papers", 0, e.getBlankPapers());
 			}
 		});
+		setState(State.PREPARE);
 	}
 
 	@Test
 	public void onlySelection() throws Exception {
 
+		setState(State.VOTE);
 		Group matteoSalvini = new Group(95);
 		VotingPaper nazionali = new VotingPaper(86, null, matteoSalvini);
 		VotingPaper comunali = new VotingPaper(0);
@@ -344,11 +376,13 @@ public class VoteTest {
 				Assert.assertEquals("no blank papers", 0, e.getBlankPapers());
 			}
 		});
+		setState(State.PREPARE);
 	}
 
 	@Test
 	public void ids() throws Exception {
 
+		setState(State.VOTE);
 		Party giorgiaMeloni = new Party(93);
 		Group matteoSalvini = new Group(95);
 		VotingPaper nazionali = new VotingPaper(86, giorgiaMeloni, matteoSalvini);
@@ -368,11 +402,13 @@ public class VoteTest {
 		Assert.assertArrayEquals("the id doesn't exist", Validator.errorMessage.getMessages().toArray(),
 				messages.getMessages().toArray());
 		Assert.assertFalse(messages.isOk());
+		setState(State.PREPARE);
 	}
 
 	@Test
 	public void disjointed() throws Exception {
 
+		setState(State.VOTE);
 		Party giorgiaMeloni = new Party(95);
 		Group matteoSalvini = new Group(93);
 		VotingPaper nazionali = new VotingPaper(86, giorgiaMeloni, matteoSalvini);
@@ -383,11 +419,13 @@ public class VoteTest {
 		Assert.assertArrayEquals("the vote is not disjointed, you can select only the group of the party",
 				Validator.errorMessage.getMessages().toArray(), messages.getMessages().toArray());
 		Assert.assertFalse(messages.isOk());
+		setState(State.PREPARE);
 	}
 
 	@Test
 	public void candidates() throws Exception {
 
+		setState(State.VOTE);
 		VotingPaper comunali = new VotingPaper(0);
 		VotingPaper regionali = new VotingPaper(11);
 		VotingPaper nazionali = new VotingPaper(86);
@@ -476,6 +514,7 @@ public class VoteTest {
 		Assert.assertArrayEquals("no candidates, the result is ok", Validator.defaultMessage.getMessages().toArray(),
 				messages.getMessages().toArray());
 		Assert.assertTrue(messages.isOk());
+		setState(State.PREPARE);
 	}
 
 }

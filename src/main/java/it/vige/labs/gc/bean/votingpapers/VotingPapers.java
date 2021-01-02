@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class VotingPapers {
-	
-	private boolean admin;
+
+	private State state;
 
 	private List<VotingPaper> votingPapers = new ArrayList<VotingPaper>();
 
@@ -17,11 +17,11 @@ public class VotingPapers {
 		this.votingPapers = votingPapers;
 	}
 
-	public boolean isAdmin() {
-		return admin;
+	public State getState() {
+		return state;
 	}
 
-	public void setAdmin(boolean admin) {
-		this.admin = admin;
+	public void setState(State state) {
+		this.state = state;
 	}
 }

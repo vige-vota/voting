@@ -7,6 +7,10 @@ public class Message {
 	private String summary;
 	
 	private String detail;
+	
+	public Message() {
+		
+	}
 
 	public Message(Severity severity, String summary, String detail) {
 		this.severity = severity;

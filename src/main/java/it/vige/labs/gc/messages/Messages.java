@@ -8,6 +8,10 @@ public class Messages {
 	
 	private boolean ok;
 	
+	public Messages() {
+		
+	}
+	
 	public Messages(boolean ok, List<Message> messages) {
 		this.ok = ok;
 		this.messages = messages;
