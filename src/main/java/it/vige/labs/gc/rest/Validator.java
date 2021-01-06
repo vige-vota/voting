@@ -1,22 +1,24 @@
 package it.vige.labs.gc.rest;
 
-import java.util.Arrays;
+import static it.vige.labs.gc.bean.votingpapers.State.PREPARE;
+import static it.vige.labs.gc.messages.Severity.error;
+import static it.vige.labs.gc.messages.Severity.message;
+import static java.util.Arrays.asList;
+import static java.util.Arrays.stream;
+import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.web.util.UriComponentsBuilder.newInstance;
 
 import org.keycloak.adapters.springsecurity.client.KeycloakRestTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponents;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import it.vige.labs.gc.bean.vote.Vote;
-import it.vige.labs.gc.bean.votingpapers.State;
 import it.vige.labs.gc.bean.votingpapers.VotingPapers;
 import it.vige.labs.gc.messages.Message;
 import it.vige.labs.gc.messages.Messages;
-import it.vige.labs.gc.messages.Severity;
 
 @Component
 public class Validator {
@@ -36,21 +38,21 @@ public class Validator {
 	private int votingpapersPort;
 
 	public final static Messages defaultMessage = new Messages(true,
-			Arrays.asList(new Message[] { new Message(Severity.message, ok, "all is ok") }));
+			asList(new Message[] { new Message(message, ok, "all is ok") }));
 
 	public final static Messages errorMessage = new Messages(false,
-			Arrays.asList(new Message[] { new Message(Severity.error, "Generic error", "Validation not ok") }));
+			asList(new Message[] { new Message(error, "Generic error", "Validation not ok") }));
 
 	private VotingPapers votingPapers;
 
 	public Messages validate(Vote vote) {
 		VotingPapers votingPapers = getVotingPapers();
-		if (votingPapers.getState() == State.PREPARE)
+		if (votingPapers.getState() == PREPARE)
 			return errorMessage;
 		Boolean[] results = new Boolean[vote.getVotingPapers().size()];
 		initResults(results);
 		vote.validate(results, votingPapers);
-		return Arrays.stream(results).allMatch(e -> e == true) ? defaultMessage : errorMessage;
+		return stream(results).allMatch(e -> e == true) ? defaultMessage : errorMessage;
 	}
 
 	private void initResults(Boolean[] results) {
@@ -61,11 +63,11 @@ public class Validator {
 
 	private VotingPapers getVotingPapers() {
 		if (votingPapers == null) {
-			UriComponents uriComponents = UriComponentsBuilder.newInstance().scheme(votingpapersScheme)
-					.host(votingpapersHost).port(votingpapersPort).path("/votingPapers").buildAndExpand();
+			UriComponents uriComponents = newInstance().scheme(votingpapersScheme).host(votingpapersHost)
+					.port(votingpapersPort).path("/votingPapers").buildAndExpand();
 
-			ResponseEntity<VotingPapers> response = restTemplate.exchange(uriComponents.toString(), HttpMethod.GET,
-					null, VotingPapers.class);
+			ResponseEntity<VotingPapers> response = restTemplate.exchange(uriComponents.toString(), GET, null,
+					VotingPapers.class);
 			votingPapers = response.getBody();
 		}
 		return votingPapers;

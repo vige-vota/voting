@@ -1,7 +1,8 @@
 package it.vige.labs.gc.bean.vote;
 
+import static java.util.stream.Collectors.toList;
+
 import java.util.List;
-import java.util.stream.Collectors;
 
 import it.vige.labs.gc.bean.votingpapers.VotingPapers;
 
@@ -51,13 +52,13 @@ public class VotingPaper extends Validation {
 			results[i] = true;
 		else {
 			it.vige.labs.gc.bean.votingpapers.VotingPaper votingPaperFromJson = votingPapers.getVotingPapers()
-					.parallelStream().filter(e -> e.getId() == id).collect(Collectors.toList()).get(0);
+					.parallelStream().filter(e -> e.getId() == id).collect(toList()).get(0);
 			if (id == votingPaperFromJson.getId()) {
 				List<it.vige.labs.gc.bean.votingpapers.Group> groups = votingPaperFromJson.getGroups();
 
 				if (groups != null) {
 					List<it.vige.labs.gc.bean.votingpapers.Party> parties = groups.parallelStream()
-							.flatMap(e -> e.getParties().parallelStream()).collect(Collectors.toList());
+							.flatMap(e -> e.getParties().parallelStream()).collect(toList());
 					if (group != null)
 						group.validate(i, results, groups, parties, votingPaperFromJson, party);
 					else if (!votingPaperFromJson.isDisjointed())

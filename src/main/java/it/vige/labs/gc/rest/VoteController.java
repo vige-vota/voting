@@ -1,5 +1,7 @@
 package it.vige.labs.gc.rest;
 
+import static it.vige.labs.gc.JavaAppApplication.TOPIC_NAME;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -7,7 +9,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import it.vige.labs.gc.JavaAppApplication;
 import it.vige.labs.gc.bean.VoteRequest;
 import it.vige.labs.gc.bean.result.VotingPapers;
 import it.vige.labs.gc.bean.result.Votings;
@@ -32,7 +33,7 @@ public class VoteController {
 		Messages messages = validator.validate(vote);
 		if (messages.isOk()) {
 			result.add(vote);
-			webSocketClient.getStompSession().send(JavaAppApplication.TOPIC_NAME, getResult());
+			webSocketClient.getStompSession().send(TOPIC_NAME, getResult());
 		}
 		return messages;
 	}

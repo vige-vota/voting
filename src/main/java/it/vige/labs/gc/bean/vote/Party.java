@@ -1,7 +1,8 @@
 package it.vige.labs.gc.bean.vote;
 
+import static java.util.stream.Collectors.toList;
+
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Party extends Identifier {
 
@@ -34,13 +35,13 @@ public class Party extends Identifier {
 			if (getCandidates().size() <= maxCandidates) {
 				List<it.vige.labs.gc.bean.votingpapers.Candidate> candidates = parties.parallelStream()
 						.filter(e -> e.getId() == id).flatMap(e -> e.getCandidates().parallelStream())
-						.collect(Collectors.toList());
+						.collect(toList());
 				result = getCandidates().parallelStream()
 						.allMatch(e -> candidates.parallelStream().anyMatch(f -> e.getId() == f.getId()));
 				if (getCandidates().size() != 1) {
 					List<Character> sexCandidates = candidates.parallelStream()
 							.filter(e -> getCandidates().parallelStream().anyMatch(f -> f.getId() == e.getId()))
-							.map(f -> f.getSex()).collect(Collectors.toList());
+							.map(f -> f.getSex()).collect(toList());
 					result = sexCandidates.toString().matches("^(?=.*M)(?=.*F).+$");
 				} else
 					result = true;
