@@ -20,10 +20,10 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
 		RequestUpgradeStrategy upgradeStrategy = new TomcatRequestUpgradeStrategy();
-		registry.addEndpoint(BROKER_NAME).setAllowedOrigins("*").withSockJS();
+		registry.addEndpoint(BROKER_NAME).setAllowedOriginPatterns("*").withSockJS();
 
 		registry.addEndpoint(BROKER_NAME).setHandshakeHandler(new DefaultHandshakeHandler(upgradeStrategy))
-				.setAllowedOrigins("*");
+				.setAllowedOriginPatterns("*");
 	}
 
 }
