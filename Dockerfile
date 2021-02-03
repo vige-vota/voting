@@ -11,7 +11,7 @@
 # limitations under the License.
 
 FROM openjdk:13.0.1-jdk
-EXPOSE 8443
+EXPOSE 8080
 RUN yum -y update && \
 	yum -y install sudo && \
     echo "%wheel ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
@@ -31,8 +31,7 @@ RUN sudo chown -R votinguser:votinguser /workspace
 RUN cd vota && ./gradlew build -x test
 RUN rm -Rf /home/votinguser/.gradle && \
 	mv /workspace/vota/build/libs/voting*.jar /workspace/vota.jar && \
-	cp /workspace/vota/application.keystore /workspace && \
 	rm -Rf /workspace/vota
 
-CMD java -Djavax.net.ssl.trustStore=/workspace/application.keystore -Djavax.net.ssl.trustStorePassword=password -jar /workspace/vota.jar --server.port=8443 --server.ssl.key-store=/workspace/application.keystore --server.ssl.key-store-password=password --server.ssl.trust-store=/workspace/application.keystore --server.ssl.trust-store-password=password --spring.profiles.active=prod && \
+CMD java -jar /workspace/vota.jar --server.port=8080 --spring.profiles.active=docker && \
 	tail -f /dev/null
