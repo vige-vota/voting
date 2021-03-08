@@ -1,7 +1,5 @@
 package it.vige.labs.gc;
 
-import static it.vige.labs.gc.bean.votingpapers.State.PREPARE;
-import static it.vige.labs.gc.bean.votingpapers.State.VOTE;
 import static it.vige.labs.gc.rest.Validator.defaultMessage;
 import static it.vige.labs.gc.rest.Validator.errorMessage;
 import static java.util.Arrays.asList;
@@ -10,47 +8,29 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.keycloak.OAuth2Constants.CLIENT_CREDENTIALS;
-import static org.keycloak.OAuth2Constants.GRANT_TYPE;
-import static org.keycloak.adapters.KeycloakDeploymentBuilder.build;
-import static org.keycloak.adapters.authentication.ClientCredentialsProviderUtils.setClientCredentials;
+import static org.mockito.Mockito.when;
 import static org.slf4j.LoggerFactory.getLogger;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.DEFINED_PORT;
 import static org.springframework.http.HttpMethod.GET;
-import static org.springframework.http.HttpMethod.POST;
-import static org.springframework.security.core.context.SecurityContextHolder.getContext;
+import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.web.util.UriComponentsBuilder.newInstance;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.security.Principal;
+import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.keycloak.adapters.KeycloakDeployment;
-import org.keycloak.adapters.RefreshableKeycloakSecurityContext;
-import org.keycloak.adapters.spi.KeycloakAccount;
-import org.keycloak.adapters.springsecurity.account.SimpleKeycloakAccount;
-import org.keycloak.adapters.springsecurity.client.KeycloakRestTemplate;
-import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
-import org.keycloak.representations.AccessTokenResponse;
+import org.mockito.Mock;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponents;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import it.vige.labs.gc.bean.VoteRequest;
 import it.vige.labs.gc.bean.result.VotingPapers;
@@ -59,8 +39,8 @@ import it.vige.labs.gc.bean.vote.Group;
 import it.vige.labs.gc.bean.vote.Party;
 import it.vige.labs.gc.bean.vote.Vote;
 import it.vige.labs.gc.bean.vote.VotingPaper;
-import it.vige.labs.gc.bean.votingpapers.State;
 import it.vige.labs.gc.messages.Messages;
+import it.vige.labs.gc.rest.Validator;
 import it.vige.labs.gc.rest.VoteController;
 
 @SpringBootTest(webEnvironment = DEFINED_PORT)
@@ -73,7 +53,10 @@ public class VoteTest {
 	private VoteController voteController;
 
 	@Autowired
-	private KeycloakRestTemplate restTemplate;
+	private Validator validator;
+
+	@Mock
+	private RestTemplate restTemplate;
 
 	@Value("${votingpapers.scheme}")
 	private String votingpapersScheme;
@@ -84,60 +67,14 @@ public class VoteTest {
 	@Value("${votingpapers.port}")
 	private int votingpapersPort;
 
-	private static String token;
-
-	private static Principal principal = new Principal() {
-
-		@Override
-		public String getName() {
-			return "myprincipal";
-		}
-
-	};
-
-	private static Set<String> roles = new HashSet<String>(
-			asList(new String[] { "admin", "votaoperator", "representative", "citizen" }));
-
-	@BeforeAll
-	public static void setAuthentication() throws FileNotFoundException {
-		FileInputStream config = new FileInputStream("src/test/resources/keycloak.json");
-		KeycloakDeployment deployment = build(config);
-		Map<String, String> reqHeaders = new HashMap<>();
-		Map<String, String> reqParams = new HashMap<>();
-		setClientCredentials(deployment, reqHeaders, reqParams);
-		HttpHeaders headers = new HttpHeaders();
-		reqHeaders.forEach((x, y) -> {
-			headers.add(x, y);
-		});
-		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-		map.add(GRANT_TYPE, CLIENT_CREDENTIALS);
-
-		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, headers);
-		RestTemplate restTemplate = new RestTemplate();
-		String url = deployment.getTokenUrl();
-		ResponseEntity<AccessTokenResponse> response = restTemplate.exchange(url, POST, request,
-				AccessTokenResponse.class, reqParams);
-		token = response.getBody().getToken();
-
-		RefreshableKeycloakSecurityContext securityContext = new RefreshableKeycloakSecurityContext(null, null, token,
-				null, null, null, null);
-		KeycloakAccount account = new SimpleKeycloakAccount(principal, roles, securityContext);
-		getContext().setAuthentication(new KeycloakAuthenticationToken(account, true));
-	}
-
-	private void setState(State state) {
-		UriComponents uriComponents = newInstance().scheme(votingpapersScheme).host(votingpapersHost)
-				.port(votingpapersPort).path("/state?state=" + state).buildAndExpand();
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Authorization", "Bearer " + token);
-		HttpEntity<?> request = new HttpEntity<>(headers);
-		restTemplate.exchange(uriComponents.toString(), GET, request, Messages.class);
+	@BeforeEach
+	public void init() throws Exception {
+		mockVotingPapers();
 	}
 
 	@Test
 	public void voteOk() throws Exception {
 
-		setState(VOTE);
 		Party pd = new Party(3);
 		Group michelBarbet = new Group(5);
 		VotingPaper comunali = new VotingPaper(0, pd, michelBarbet);
@@ -239,13 +176,11 @@ public class VoteTest {
 				assertEquals(0, e.getBlankPapers(), "no blank papers");
 			}
 		});
-		setState(PREPARE);
 	}
 
 	@Test
 	public void onlySelection() throws Exception {
 
-		setState(VOTE);
 		Group matteoSalvini = new Group(95);
 		VotingPaper nazionali = new VotingPaper(86, null, matteoSalvini);
 		VotingPaper comunali = new VotingPaper(0);
@@ -369,13 +304,11 @@ public class VoteTest {
 				assertEquals(0, e.getBlankPapers(), "no blank papers");
 			}
 		});
-		setState(PREPARE);
 	}
 
 	@Test
 	public void ids() throws Exception {
 
-		setState(VOTE);
 		Party giorgiaMeloni = new Party(93);
 		Group matteoSalvini = new Group(95);
 		VotingPaper nazionali = new VotingPaper(86, giorgiaMeloni, matteoSalvini);
@@ -395,13 +328,11 @@ public class VoteTest {
 		assertArrayEquals(errorMessage.getMessages().toArray(), messages.getMessages().toArray(),
 				"the id doesn't exist");
 		assertFalse(messages.isOk());
-		setState(PREPARE);
 	}
 
 	@Test
 	public void disjointed() throws Exception {
 
-		setState(VOTE);
 		Party giorgiaMeloni = new Party(95);
 		Group matteoSalvini = new Group(93);
 		VotingPaper nazionali = new VotingPaper(86, giorgiaMeloni, matteoSalvini);
@@ -412,13 +343,11 @@ public class VoteTest {
 		assertArrayEquals(errorMessage.getMessages().toArray(), messages.getMessages().toArray(),
 				"the vote is not disjointed, you can select only the group of the party");
 		assertFalse(messages.isOk());
-		setState(PREPARE);
 	}
 
 	@Test
 	public void candidates() throws Exception {
 
-		setState(VOTE);
 		VotingPaper comunali = new VotingPaper(0);
 		VotingPaper regionali = new VotingPaper(11);
 		VotingPaper nazionali = new VotingPaper(86);
@@ -503,7 +432,19 @@ public class VoteTest {
 		assertArrayEquals(defaultMessage.getMessages().toArray(), messages.getMessages().toArray(),
 				"no candidates, the result is ok");
 		assertTrue(messages.isOk());
-		setState(PREPARE);
+	}
+
+	private void mockVotingPapers() throws Exception {
+		ObjectMapper objectMapper = new ObjectMapper();
+		InputStream jsonStream = new FileInputStream("src/test/resources/mock/config-app.json");
+		it.vige.labs.gc.bean.votingpapers.VotingPapers votingPapers = objectMapper.readValue(jsonStream,
+				it.vige.labs.gc.bean.votingpapers.VotingPapers.class);
+		String url = newInstance().scheme(votingpapersScheme).host(votingpapersHost).port(votingpapersPort)
+				.path("/votingPapers").buildAndExpand().toString();
+		when(restTemplate.exchange(url, GET, null, it.vige.labs.gc.bean.votingpapers.VotingPapers.class))
+				.thenReturn(new ResponseEntity<it.vige.labs.gc.bean.votingpapers.VotingPapers>(votingPapers, OK));
+		validator.setRestTemplate(restTemplate);
+		voteController.setValidator(validator);
 	}
 
 }

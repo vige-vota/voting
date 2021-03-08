@@ -8,11 +8,11 @@ import static java.util.Arrays.stream;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.web.util.UriComponentsBuilder.newInstance;
 
-import org.keycloak.adapters.springsecurity.client.KeycloakRestTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 
 import it.vige.labs.gc.bean.vote.Vote;
@@ -26,7 +26,7 @@ public class Validator {
 	public final static String ok = "ok";
 
 	@Autowired
-	private KeycloakRestTemplate restTemplate;
+	private RestTemplate restTemplate;
 
 	@Value("${votingpapers.scheme}")
 	private String votingpapersScheme;
@@ -71,5 +71,9 @@ public class Validator {
 			votingPapers = response.getBody();
 		}
 		return votingPapers;
+	}
+
+	public void setRestTemplate(RestTemplate restTemplate) {
+		this.restTemplate = restTemplate;
 	}
 }

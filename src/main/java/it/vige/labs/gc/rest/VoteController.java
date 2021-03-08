@@ -54,4 +54,8 @@ public class VoteController {
 		votings.getVotings().add(votingPaper);
 		return votings;
 	}
+
+	public void setValidator(Validator validator) {
+		this.validator = validator;
+	}
 }
