@@ -35,9 +35,9 @@ import org.springframework.security.web.authentication.session.SessionAuthentica
 @ComponentScan(basePackageClasses = KeycloakSecurityComponents.class)
 public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
 
-	String ADMIN_ROLE = "admin";
+	public final static String ADMIN_ROLE = "admin";
 
-	String CITIZEN_ROLE = "citizen";
+	public final static String CITIZEN_ROLE = "citizen";
 
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {

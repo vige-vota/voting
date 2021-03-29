@@ -33,3 +33,13 @@ dependencies {
     implementation('org.keycloak:keycloak-spring-boot-starter:12.0.2')
     testImplementation('org.springframework.boot:spring-boot-starter-test')
 }
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events 'passed', 'skipped', 'failed'
+    }
+    filter {
+        excludeTestsMatching '*ITTest'
+    }
+}
