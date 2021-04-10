@@ -12,12 +12,14 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.keycloak.OAuth2Constants.CLIENT_CREDENTIALS;
-import static org.keycloak.OAuth2Constants.GRANT_TYPE;
+import static org.keycloak.OAuth2Constants.ACCESS_TOKEN;
+import static org.keycloak.OAuth2Constants.CLIENT_ID;
+import static org.keycloak.OAuth2Constants.REDIRECT_URI;
+import static org.keycloak.OAuth2Constants.RESPONSE_TYPE;
 import static org.keycloak.adapters.KeycloakDeploymentBuilder.build;
-import static org.keycloak.adapters.authentication.ClientCredentialsProviderUtils.setClientCredentials;
 import static org.slf4j.LoggerFactory.getLogger;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.DEFINED_PORT;
+import static org.springframework.http.HttpHeaders.SET_COOKIE;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.security.core.context.SecurityContextHolder.getContext;
@@ -25,14 +27,15 @@ import static org.springframework.web.util.UriComponentsBuilder.newInstance;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.net.URI;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.keycloak.adapters.KeycloakDeployment;
 import org.keycloak.adapters.RefreshableKeycloakSecurityContext;
@@ -40,7 +43,6 @@ import org.keycloak.adapters.spi.KeycloakAccount;
 import org.keycloak.adapters.springsecurity.account.SimpleKeycloakAccount;
 import org.keycloak.adapters.springsecurity.client.KeycloakRestTemplate;
 import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
-import org.keycloak.representations.AccessTokenResponse;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -86,9 +88,9 @@ public class VoteITTest {
 	@Value("${votingpapers.port}")
 	private int votingpapersPort;
 
-	private static String token;
+	private String token;
 
-	private static Principal principal = new Principal() {
+	private Principal principal = new Principal() {
 
 		@Override
 		public String getName() {
@@ -97,28 +99,37 @@ public class VoteITTest {
 
 	};
 
-	private static Set<String> roles = new HashSet<String>(asList(new String[] { ADMIN_ROLE, CITIZEN_ROLE }));
+	private Set<String> roles = new HashSet<String>(asList(new String[] { ADMIN_ROLE, CITIZEN_ROLE }));
 
-	@BeforeAll
-	public static void setAuthentication() throws FileNotFoundException {
+	private void setAuthentication() throws FileNotFoundException {
 		FileInputStream config = new FileInputStream("src/test/resources/keycloak.json");
 		KeycloakDeployment deployment = build(config);
 		Map<String, String> reqHeaders = new HashMap<>();
 		Map<String, String> reqParams = new HashMap<>();
-		setClientCredentials(deployment, reqHeaders, reqParams);
+		RestTemplate restTemplate = new RestTemplate();
+		URI uri = deployment.getAuthUrl().clone().queryParam(CLIENT_ID, deployment.getResourceName()).queryParam(
+				REDIRECT_URI,
+				votingpapersScheme + "://" + votingpapersHost + ":" + votingpapersPort + "/swagger-ui/index.html")
+				.queryParam(RESPONSE_TYPE, "token").build();
+		ResponseEntity<String> response = restTemplate.getForEntity(uri, String.class);
+
+		List<String> cookie = response.getHeaders().get(SET_COOKIE);
 		HttpHeaders headers = new HttpHeaders();
 		reqHeaders.forEach((x, y) -> {
 			headers.add(x, y);
 		});
+		headers.put("Cookie", cookie);
 		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-		map.add(GRANT_TYPE, CLIENT_CREDENTIALS);
+		map.add("username", "root");
+		map.add("password", "gtn");
 
 		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, headers);
-		RestTemplate restTemplate = new RestTemplate();
-		String url = deployment.getTokenUrl();
-		ResponseEntity<AccessTokenResponse> response = restTemplate.exchange(url, POST, request,
-				AccessTokenResponse.class, reqParams);
-		token = response.getBody().getToken();
+		String url = response.getBody().substring(response.getBody().indexOf("action=\"") + 8);
+		url = url.substring(0, url.indexOf("\"")).replaceAll("&amp;", "&");
+		response = restTemplate.exchange(url, POST, request, String.class, reqParams);
+		token = response.getHeaders().get("Location").get(0);
+		token = token.substring(token.indexOf(ACCESS_TOKEN + "=") + 13);
+		token = token.substring(0, token.indexOf("&"));
 
 		RefreshableKeycloakSecurityContext securityContext = new RefreshableKeycloakSecurityContext(null, null, token,
 				null, null, null, null);
@@ -126,7 +137,8 @@ public class VoteITTest {
 		getContext().setAuthentication(new KeycloakAuthenticationToken(account, true));
 	}
 
-	private void setState(State state) {
+	private void setState(State state) throws FileNotFoundException {
+		setAuthentication();
 		UriComponents uriComponents = newInstance().scheme(votingpapersScheme).host(votingpapersHost)
 				.port(votingpapersPort).path("/state?state=" + state).buildAndExpand();
 		HttpHeaders headers = new HttpHeaders();
