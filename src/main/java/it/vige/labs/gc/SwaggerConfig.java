@@ -10,13 +10,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import springfox.documentation.builders.AuthorizationScopeBuilder;
 import springfox.documentation.builders.LoginEndpointBuilder;
 import springfox.documentation.service.AuthorizationScope;
 import springfox.documentation.service.GrantType;
@@ -31,8 +28,6 @@ import springfox.documentation.swagger.web.SecurityConfiguration;
 
 @Configuration
 public class SwaggerConfig {
-
-	private Logger logger = LoggerFactory.getLogger(SwaggerConfig.class);
 
 	@Value("${keycloak.auth-server-url}")
 	private String authServerUrl;
@@ -80,16 +75,6 @@ public class SwaggerConfig {
 	}
 
 	private List<AuthorizationScope> scopes() {
-		List<AuthorizationScope> scopes = new ArrayList<>();
-		for (String scopeItem : new String[] { "openid=openid", "profile=profile" }) {
-			String scope[] = scopeItem.split("=");
-			if (scope.length == 2) {
-				scopes.add(new AuthorizationScopeBuilder().scope(scope[0]).description(scope[1]).build());
-			} else {
-				logger.warn("Scope '{}' is not valid (format is scope=description)", scopeItem);
-			}
-		}
-
-		return scopes;
+		return new ArrayList<>();
 	}
 }

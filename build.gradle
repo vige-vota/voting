@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '2.4.1'
+        springBootVersion = '2.4.4'
     }
     repositories {
         mavenCentral()
@@ -24,13 +24,12 @@ repositories {
 }
 
 dependencies {
-    implementation('org.springframework.boot:spring-boot-starter-web')
     implementation('org.springframework.boot:spring-boot-starter-data-rest')
     implementation("org.springframework.boot:spring-boot-starter-websocket")
     implementation('org.springframework.boot:spring-boot-starter-security')
     implementation('io.springfox:springfox-boot-starter:3.0.0')
     implementation('org.apache.httpcomponents:httpclient')
-    implementation('org.keycloak:keycloak-spring-boot-starter:12.0.2')
+    implementation('org.keycloak:keycloak-spring-boot-starter:12.0.4')
     testImplementation('org.springframework.boot:spring-boot-starter-test')
 }
 
@@ -38,8 +37,5 @@ test {
     useJUnitPlatform()
     testLogging {
         events 'passed', 'skipped', 'failed'
-    }
-    filter {
-        excludeTestsMatching '*ITTest'
     }
 }
