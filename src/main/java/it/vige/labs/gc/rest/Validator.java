@@ -19,6 +19,7 @@ import it.vige.labs.gc.bean.vote.Vote;
 import it.vige.labs.gc.bean.votingpapers.VotingPapers;
 import it.vige.labs.gc.messages.Message;
 import it.vige.labs.gc.messages.Messages;
+import it.vige.labs.gc.users.User;
 
 @Component
 public class Validator {
@@ -45,20 +46,19 @@ public class Validator {
 
 	private VotingPapers votingPapers;
 
-	public Messages validate(Vote vote) {
+	public Messages validate(Vote vote, User user) {
 		VotingPapers votingPapers = getVotingPapers();
 		if (votingPapers.getState() == PREPARE)
 			return errorMessage;
 		Boolean[] results = new Boolean[vote.getVotingPapers().size()];
 		initResults(results);
-		vote.validate(votingPapers, results);
+		vote.validate(votingPapers, results, user);
 		return stream(results).allMatch(e -> e == true) ? defaultMessage : errorMessage;
 	}
 
 	private void initResults(Boolean[] results) {
 		for (int i = 0; i < results.length; i++)
 			results[i] = false;
-
 	}
 
 	private VotingPapers getVotingPapers() {

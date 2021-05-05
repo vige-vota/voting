@@ -14,6 +14,8 @@ import it.vige.labs.gc.bean.result.VotingPapers;
 import it.vige.labs.gc.bean.result.Votings;
 import it.vige.labs.gc.bean.vote.Vote;
 import it.vige.labs.gc.messages.Messages;
+import it.vige.labs.gc.users.Authorities;
+import it.vige.labs.gc.users.User;
 import it.vige.labs.gc.websocket.WebSocketClient;
 
 @RestController
@@ -26,11 +28,15 @@ public class VoteController {
 	private WebSocketClient webSocketClient;
 
 	@Autowired
+	private Authorities authorities;
+
+	@Autowired
 	private Validator validator;
 
 	@PostMapping(value = "/vote")
 	public Messages vote(@RequestBody Vote vote) throws Exception {
-		Messages messages = validator.validate(vote);
+		User user = authorities.getUser();
+		Messages messages = validator.validate(vote, user);
 		if (messages.isOk()) {
 			result.add(vote);
 			webSocketClient.getStompSession().send(TOPIC_NAME, getResult());
@@ -57,5 +63,9 @@ public class VoteController {
 
 	public void setValidator(Validator validator) {
 		this.validator = validator;
+	}
+
+	public void setAuthorities(Authorities authorities) {
+		this.authorities = authorities;
 	}
 }

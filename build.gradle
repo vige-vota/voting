@@ -30,6 +30,7 @@ dependencies {
     implementation('io.springfox:springfox-boot-starter:3.0.0')
     implementation('org.apache.httpcomponents:httpclient')
     implementation('org.keycloak:keycloak-spring-boot-starter:12.0.4')
+    implementation('com.c4-soft.springaddons:spring-security-oauth2-test-webmvc-addons:2.5.2')
     testImplementation('org.springframework.boot:spring-boot-starter-test')
 }
 

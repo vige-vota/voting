@@ -4,6 +4,7 @@
 		{
 			"id": 0,
 			"disjointed": true,
+			"zone": 6542276,
 			"groups": [
 				{
 					"id": 1,
@@ -49,6 +50,7 @@
 			"id": 11,
 			"disjointed": true,
 			"maxCandidates": 2,
+			"zone": 2523228,
 			"groups": [
 				{
 					"id": 12,

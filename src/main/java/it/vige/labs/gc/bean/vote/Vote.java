@@ -3,6 +3,7 @@ package it.vige.labs.gc.bean.vote;
 import java.util.List;
 
 import it.vige.labs.gc.bean.votingpapers.VotingPapers;
+import it.vige.labs.gc.users.User;
 
 public class Vote {
 
@@ -23,12 +24,12 @@ public class Vote {
 		this.votingPapers = votingPapers;
 	}
 
-	public void validate(VotingPapers votingPapers, Boolean[] results) {
+	public void validate(VotingPapers votingPapers, Boolean[] results, User user) {
 		int i = 0;
 		List<VotingPaper> votingPapersFromVote = getVotingPapers();
-		if (votingPapersFromVote.size() == votingPapers.getVotingPapers().size() && !votingPapersFromVote.isEmpty())
+		if (votingPapersFromVote.size() <= votingPapers.getVotingPapers().size() && !votingPapersFromVote.isEmpty())
 			for (VotingPaper votingPaper : votingPapersFromVote) {
-				votingPaper.validate(i++, votingPapers, results);
+				votingPaper.validate(i++, votingPapers, results, user);
 			}
 	}
 }

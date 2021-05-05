@@ -9,6 +9,8 @@ public class VotingPaper extends Identifier {
     private int maxCandidates;
 	
 	private boolean disjointed;
+    
+    private int zone = -1;
 	
 	private List<Group> groups;
 	
@@ -28,6 +30,14 @@ public class VotingPaper extends Identifier {
 
 	public void setDisjointed(boolean disjointed) {
 		this.disjointed = disjointed;
+	}
+
+	public int getZone() {
+		return zone;
+	}
+
+	public void setZone(int zone) {
+		this.zone = zone;
 	}
 
 	public List<Group> getGroups() {

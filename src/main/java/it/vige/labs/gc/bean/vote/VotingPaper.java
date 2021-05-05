@@ -5,6 +5,7 @@ import static java.util.stream.Collectors.toList;
 import java.util.List;
 
 import it.vige.labs.gc.bean.votingpapers.VotingPapers;
+import it.vige.labs.gc.users.User;
 
 public class VotingPaper extends Validation {
 
@@ -47,7 +48,7 @@ public class VotingPaper extends Validation {
 		this.group = group;
 	}
 
-	public void validate(int i, VotingPapers votingPapers, Boolean[] results) {
+	public void validate(int i, VotingPapers votingPapers, Boolean[] results, User user) {
 		if (group == null && party == null)
 			results[i] = true;
 		else {
@@ -55,21 +56,24 @@ public class VotingPaper extends Validation {
 					.parallelStream().filter(e -> e.getId() == id).collect(toList()).get(0);
 			if (id == votingPaperFromJson.getId()) {
 				List<it.vige.labs.gc.bean.votingpapers.Group> groups = votingPaperFromJson.getGroups();
+				if (!user.hasZone(votingPaperFromJson))
+					results[i] = false;
+				else {
+					if (groups != null) {
+						List<it.vige.labs.gc.bean.votingpapers.Party> parties = groups.parallelStream()
+								.flatMap(e -> e.getParties().parallelStream()).collect(toList());
+						if (group != null)
+							group.validate(i, results, groups, parties, votingPaperFromJson, party);
+						else if (!votingPaperFromJson.isDisjointed())
+							results[i] = false;
+						else if (validateExisting(parties, party, votingPaperFromJson.getMaxCandidates()))
+							results[i] = true;
+					}
 
-				if (groups != null) {
-					List<it.vige.labs.gc.bean.votingpapers.Party> parties = groups.parallelStream()
-							.flatMap(e -> e.getParties().parallelStream()).collect(toList());
-					if (group != null)
-						group.validate(i, results, groups, parties, votingPaperFromJson, party);
-					else if (!votingPaperFromJson.isDisjointed())
-						results[i] = false;
-					else if (validateExisting(parties, party, votingPaperFromJson.getMaxCandidates()))
-						results[i] = true;
+					List<it.vige.labs.gc.bean.votingpapers.Party> parties = votingPaperFromJson.getParties();
+					if (parties != null)
+						results[i] = validateExisting(parties, party, votingPaperFromJson.getMaxCandidates());
 				}
-
-				List<it.vige.labs.gc.bean.votingpapers.Party> parties = votingPaperFromJson.getParties();
-				if (parties != null)
-					results[i] = validateExisting(parties, party, votingPaperFromJson.getMaxCandidates());
 			}
 		}
 	}
