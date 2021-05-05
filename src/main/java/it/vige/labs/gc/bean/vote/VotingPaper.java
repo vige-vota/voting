@@ -47,7 +47,7 @@ public class VotingPaper extends Validation {
 		this.group = group;
 	}
 
-	public void validate(VotingPapers votingPapers, int i, Boolean[] results) {
+	public void validate(int i, VotingPapers votingPapers, Boolean[] results) {
 		if (group == null && party == null)
 			results[i] = true;
 		else {

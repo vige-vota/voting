@@ -51,7 +51,7 @@ public class Validator {
 			return errorMessage;
 		Boolean[] results = new Boolean[vote.getVotingPapers().size()];
 		initResults(results);
-		vote.validate(results, votingPapers);
+		vote.validate(votingPapers, results);
 		return stream(results).allMatch(e -> e == true) ? defaultMessage : errorMessage;
 	}
 

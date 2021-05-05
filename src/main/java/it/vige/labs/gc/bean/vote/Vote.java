@@ -23,12 +23,12 @@ public class Vote {
 		this.votingPapers = votingPapers;
 	}
 
-	public void validate(Boolean[] results, VotingPapers votingPapers) {
+	public void validate(VotingPapers votingPapers, Boolean[] results) {
 		int i = 0;
 		List<VotingPaper> votingPapersFromVote = getVotingPapers();
 		if (votingPapersFromVote.size() == votingPapers.getVotingPapers().size() && !votingPapersFromVote.isEmpty())
 			for (VotingPaper votingPaper : votingPapersFromVote) {
-				votingPaper.validate(votingPapers, i++, results);
+				votingPaper.validate(i++, votingPapers, results);
 			}
 	}
 }
