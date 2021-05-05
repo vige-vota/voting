@@ -325,6 +325,29 @@ public class VoteTest {
 
 	@Test
 	@WithMockKeycloakAuth(authorities = { CITIZEN_ROLE }, oidc = @OidcStandardClaims(preferredUsername = DEFAULT_USER))
+	public void authorized() throws Exception {
+
+		mockUsers(new String[] { "6542277", "2523962", "2523228", "4" });
+		VotingPaper comunali = new VotingPaper(0);
+		Group michelBarbet = new Group(5);
+		comunali.setGroup(michelBarbet);
+		Vote vote = new Vote(new ArrayList<VotingPaper>(asList(new VotingPaper[] { comunali })));
+		Messages messages = voteController.vote(vote);
+		logger.info(messages + "");
+		assertArrayEquals(errorMessage.getMessages().toArray(), messages.getMessages().toArray(),
+				"user is not authorized to vote the voting paper");
+		assertFalse(messages.isOk());
+
+		mockUsers(new String[] { "6542276", "2523962", "2523228", "4" });
+		messages = voteController.vote(vote);
+		logger.info(messages + "");
+		assertArrayEquals(defaultMessage.getMessages().toArray(), messages.getMessages().toArray(),
+				"only a group without party is ok");
+		assertTrue(messages.isOk());
+	}
+
+	@Test
+	@WithMockKeycloakAuth(authorities = { CITIZEN_ROLE }, oidc = @OidcStandardClaims(preferredUsername = DEFAULT_USER))
 	public void ids() throws Exception {
 
 		mockUsers(new String[] { "-1" });
