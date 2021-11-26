@@ -1,8 +1,5 @@
 package it.vige.labs.gc.users;
 
-import static java.lang.Integer.parseInt;
-import static java.util.stream.Collectors.toList;
-
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -21,7 +18,7 @@ public interface Converters {
 			Map<String, List<String>> attributes = t.getAttributes();
 			if (attributes != null) {
 				List<String> zones = attributes.get("zones");
-				user.setZones(zones.parallelStream().map(zone -> parseInt(zone)).collect(toList()));
+				user.setZones(zones);
 			}
 
 			return user;

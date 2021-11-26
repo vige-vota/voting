@@ -10,7 +10,7 @@ public class VotingPaper extends Identifier {
 	
 	private boolean disjointed;
     
-    private int zone = -1;
+    private String zone;
 	
 	private List<Group> groups;
 	
@@ -32,11 +32,11 @@ public class VotingPaper extends Identifier {
 		this.disjointed = disjointed;
 	}
 
-	public int getZone() {
+	public String getZone() {
 		return zone;
 	}
 
-	public void setZone(int zone) {
+	public void setZone(String zone) {
 		this.zone = zone;
 	}
 

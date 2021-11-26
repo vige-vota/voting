@@ -18,7 +18,7 @@ public class User implements Serializable {
 
 	private String surname;
 
-	private List<Integer> zones;
+	private List<String> zones;
 
 	private Collection<? extends GrantedAuthority> roles;
 
@@ -46,11 +46,11 @@ public class User implements Serializable {
 		this.surname = surname;
 	}
 
-	public List<Integer> getZones() {
+	public List<String> getZones() {
 		return zones;
 	}
 
-	public void setZones(List<Integer> zones) {
+	public void setZones(List<String> zones) {
 		this.zones = zones;
 	}
 
@@ -72,7 +72,7 @@ public class User implements Serializable {
 	}
 
 	public boolean hasZone(it.vige.labs.gc.bean.votingpapers.VotingPaper votingPaperFromJson) {
-		return votingPaperFromJson.getZone() == -1 || getZones().contains(votingPaperFromJson.getZone());
+		return votingPaperFromJson.getZone() == null || getZones().contains(votingPaperFromJson.getZone());
 	}
 
 	@Override
