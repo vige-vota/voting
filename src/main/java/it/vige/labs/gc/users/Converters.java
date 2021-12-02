@@ -18,7 +18,7 @@ public interface Converters {
 			Map<String, List<String>> attributes = t.getAttributes();
 			if (attributes != null) {
 				List<String> zones = attributes.get("zones");
-				user.setZones(zones);
+				user.setZones(zones.get(0));
 			}
 
 			return user;

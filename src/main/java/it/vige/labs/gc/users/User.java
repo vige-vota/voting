@@ -18,7 +18,7 @@ public class User implements Serializable {
 
 	private String surname;
 
-	private List<String> zones;
+	private String zones;
 
 	private Collection<? extends GrantedAuthority> roles;
 
@@ -46,11 +46,11 @@ public class User implements Serializable {
 		this.surname = surname;
 	}
 
-	public List<String> getZones() {
+	public String getZones() {
 		return zones;
 	}
 
-	public void setZones(List<String> zones) {
+	public void setZones(String zones) {
 		this.zones = zones;
 	}
 

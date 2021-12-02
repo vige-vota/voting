@@ -1,8 +1,8 @@
 package it.vige.labs.gc;
 
-import static it.vige.labs.gc.users.Authorities.CITIZEN_ROLE;
 import static it.vige.labs.gc.rest.Validator.defaultMessage;
 import static it.vige.labs.gc.rest.Validator.errorMessage;
+import static it.vige.labs.gc.users.Authorities.CITIZEN_ROLE;
 import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -89,7 +89,7 @@ public class VoteTest {
 	@WithMockKeycloakAuth(authorities = { CITIZEN_ROLE }, oidc = @OidcStandardClaims(preferredUsername = DEFAULT_USER))
 	public void voteOk() throws Exception {
 
-		mockUsers(new String[] { "6542276", "2523962", "2523228", "4" });
+		mockUsers("4-2523228-2523962-6542276");
 		Party pd = new Party(3);
 		Group michelBarbet = new Group(5);
 		VotingPaper comunali = new VotingPaper(0, pd, michelBarbet);
@@ -197,7 +197,7 @@ public class VoteTest {
 	@WithMockKeycloakAuth(authorities = { CITIZEN_ROLE }, oidc = @OidcStandardClaims(preferredUsername = DEFAULT_USER))
 	public void onlySelection() throws Exception {
 
-		mockUsers(new String[] { "6542276", "2523962", "2523228", "4" });
+		mockUsers("4-2523228-2523962-6542276");
 		Group matteoSalvini = new Group(95);
 		VotingPaper nazionali = new VotingPaper(86, null, matteoSalvini);
 		VotingPaper comunali = new VotingPaper(0);
@@ -327,7 +327,7 @@ public class VoteTest {
 	@WithMockKeycloakAuth(authorities = { CITIZEN_ROLE }, oidc = @OidcStandardClaims(preferredUsername = DEFAULT_USER))
 	public void authorized() throws Exception {
 
-		mockUsers(new String[] { "6542277", "2523962", "2523228", "4" });
+		mockUsers("4-2523228-2523962-6542277");
 		VotingPaper comunali = new VotingPaper(0);
 		Group michelBarbet = new Group(5);
 		comunali.setGroup(michelBarbet);
@@ -338,7 +338,7 @@ public class VoteTest {
 				"user is not authorized to vote the voting paper");
 		assertFalse(messages.isOk());
 
-		mockUsers(new String[] { "6542276", "2523962", "2523228", "4" });
+		mockUsers("4-2523228-2523962-6542276");
 		messages = voteController.vote(vote);
 		logger.info(messages + "");
 		assertArrayEquals(defaultMessage.getMessages().toArray(), messages.getMessages().toArray(),
@@ -350,7 +350,7 @@ public class VoteTest {
 	@WithMockKeycloakAuth(authorities = { CITIZEN_ROLE }, oidc = @OidcStandardClaims(preferredUsername = DEFAULT_USER))
 	public void ids() throws Exception {
 
-		mockUsers(new String[] { "-1" });
+		mockUsers("-1");
 		Party giorgiaMeloni = new Party(93);
 		Group matteoSalvini = new Group(95);
 		VotingPaper nazionali = new VotingPaper(86, giorgiaMeloni, matteoSalvini);
@@ -376,7 +376,7 @@ public class VoteTest {
 	@WithMockKeycloakAuth(authorities = { CITIZEN_ROLE }, oidc = @OidcStandardClaims(preferredUsername = DEFAULT_USER))
 	public void disjointed() throws Exception {
 
-		mockUsers(new String[] { "-1" });
+		mockUsers("-1");
 		Party giorgiaMeloni = new Party(95);
 		Group matteoSalvini = new Group(93);
 		VotingPaper nazionali = new VotingPaper(86, giorgiaMeloni, matteoSalvini);
@@ -393,7 +393,7 @@ public class VoteTest {
 	@WithMockKeycloakAuth(authorities = { CITIZEN_ROLE }, oidc = @OidcStandardClaims(preferredUsername = DEFAULT_USER))
 	public void candidates() throws Exception {
 
-		mockUsers(new String[] { "6542276", "2523962", "2523228", "4" });
+		mockUsers("4-2523228-2523962-6542276");
 		VotingPaper comunali = new VotingPaper(0);
 		VotingPaper regionali = new VotingPaper(11);
 		VotingPaper nazionali = new VotingPaper(86);
@@ -493,7 +493,7 @@ public class VoteTest {
 		voteController.setValidator(validator);
 	}
 
-	private void mockUsers(String[] zones) {
+	private void mockUsers(String zones) {
 		UserRepresentation user = new UserRepresentation();
 		user.setUsername(DEFAULT_USER);
 		Map<String, List<String>> attributes = new HashMap<String, List<String>>();
