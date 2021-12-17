@@ -9,7 +9,7 @@ Start the Java application with the following commands:
 ```
 java -jar build/libs/voting-1.0.0-SNAPSHOT.jar --server.port=8080 --spring.profiles.active=dev
 ```
-and open http://localhost:8080/swagger-ui/index.html in your browser to connect to the vote application.
+and open [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html) in your browser to connect to the vote application.
 
 If you need to start it on a environment production:
 ```
@@ -22,7 +22,7 @@ $IP_ADDRESS  vota-votingpapers.vige.it
 ```
 
 where in $IP_ADDRESS you must choose the ip address where is located the server
-and open https://vota-voting.vige.it:8443/swagger-ui.html in your browser to connect to the vote application.
+and open [https://vota-voting.vige.it:8443/swagger-ui.html](https://vota-voting.vige.it:8443/swagger-ui.html) in your browser to connect to the vote application.
 
 ## certificates
 
@@ -58,6 +58,6 @@ docker pull vige/vota-voting
 ```
 To run the image use the command:
 ```
-docker run -d --name vota-voting -p8443:8443 vige/vota-voting
+docker run -d --name vota-voting -p8080:8080 vige/vota-voting
 ```
-Then open https://vota-voting.vige.it:8443/swagger-ui/index.html to connect to the vote application
+Then open [http://vota-voting.vige.it:8080/swagger-ui/index.html](http://vota-voting.vige.it:8080/swagger-ui/index.html) to connect to the vote application
