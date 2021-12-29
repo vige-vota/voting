@@ -64,7 +64,7 @@ public class Validator {
 	private VotingPapers getVotingPapers() {
 		if (votingPapers == null) {
 			UriComponents uriComponents = newInstance().scheme(votingpapersScheme).host(votingpapersHost)
-					.port(votingpapersPort).path("/votingPapers").buildAndExpand();
+					.port(votingpapersPort).path("/votingPapers?info&all").buildAndExpand();
 
 			ResponseEntity<VotingPapers> response = restTemplate.exchange(uriComponents.toString(), GET, null,
 					VotingPapers.class);

@@ -56,7 +56,7 @@ public class VotingPaper extends Validation {
 					.parallelStream().filter(e -> e.getId() == id).collect(toList()).get(0);
 			if (id == votingPaperFromJson.getId()) {
 				List<it.vige.labs.gc.bean.votingpapers.Group> groups = votingPaperFromJson.getGroups();
-				if (!user.hasZone(votingPaperFromJson))
+				if (!user.hasZone(votingPaperFromJson) || !votingPaperFromJson.dateOk())
 					results[i] = false;
 				else {
 					if (groups != null) {

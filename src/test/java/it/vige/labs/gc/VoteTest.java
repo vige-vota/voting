@@ -5,6 +5,8 @@ import static it.vige.labs.gc.rest.Validator.errorMessage;
 import static it.vige.labs.gc.users.Authorities.CITIZEN_ROLE;
 import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
+import static java.util.Calendar.DATE;
+import static java.util.Calendar.getInstance;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -19,6 +21,8 @@ import static org.springframework.web.util.UriComponentsBuilder.newInstance;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -480,13 +484,29 @@ public class VoteTest {
 		assertTrue(messages.isOk());
 	}
 
+	private void addDates(it.vige.labs.gc.bean.votingpapers.VotingPaper votingPaper, int startingDays, int endingDays) {
+		Date startingDate = addDays(new Date(), startingDays);
+		votingPaper.setStartingDate(startingDate);
+		votingPaper.setEndingDate(addDays(startingDate, endingDays));
+	}
+
+	private Date addDays(Date date, int days) {
+		Calendar cal = getInstance();
+		cal.setTime(date);
+		cal.add(DATE, days); // minus number would decrement the days
+		return cal.getTime();
+	}
+
 	private void mockVotingPapers() throws Exception {
 		ObjectMapper objectMapper = new ObjectMapper();
 		InputStream jsonStream = new FileInputStream("src/test/resources/mock/config-app.json");
 		it.vige.labs.gc.bean.votingpapers.VotingPapers votingPapers = objectMapper.readValue(jsonStream,
 				it.vige.labs.gc.bean.votingpapers.VotingPapers.class);
+		votingPapers.getVotingPapers().forEach(e -> {
+			addDates(e, -1, 3);
+		});
 		String url = newInstance().scheme(votingpapersScheme).host(votingpapersHost).port(votingpapersPort)
-				.path("/votingPapers").buildAndExpand().toString();
+				.path("/votingPapers?info&all").buildAndExpand().toString();
 		when(restTemplate.exchange(url, GET, null, it.vige.labs.gc.bean.votingpapers.VotingPapers.class))
 				.thenReturn(new ResponseEntity<it.vige.labs.gc.bean.votingpapers.VotingPapers>(votingPapers, OK));
 		validator.setRestTemplate(restTemplate);
