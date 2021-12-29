@@ -1,6 +1,9 @@
 package it.vige.labs.gc.rest;
 
 import static it.vige.labs.gc.JavaAppApplication.TOPIC_NAME;
+import static it.vige.labs.gc.rest.Validator.defaultMessage;
+import static it.vige.labs.gc.rest.Validator.errorMessage;
+import static it.vige.labs.gc.users.Authorities.ADMIN_ROLE;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -59,6 +62,20 @@ public class VoteController {
 		Votings votings = new Votings();
 		votings.getVotings().add(votingPaper);
 		return votings;
+	}
+
+	@GetMapping(value = "/resetVotingPapers")
+	public Messages resetVotingPapers() {
+		try {
+			User user = authorities.getUser();
+			if (user.hasRole(ADMIN_ROLE))
+				validator.setVotingPapers(null);
+			else
+				return errorMessage;
+		} catch (Exception ex) {
+			return errorMessage;
+		}
+		return defaultMessage;
 	}
 
 	public void setValidator(Validator validator) {

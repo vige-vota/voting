@@ -2,6 +2,7 @@ package it.vige.labs.gc;
 
 import static it.vige.labs.gc.rest.Validator.defaultMessage;
 import static it.vige.labs.gc.rest.Validator.errorMessage;
+import static it.vige.labs.gc.users.Authorities.ADMIN_ROLE;
 import static it.vige.labs.gc.users.Authorities.CITIZEN_ROLE;
 import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
@@ -63,6 +64,8 @@ public class VoteTest {
 
 	private final static String DEFAULT_USER = "669d3be4-4a67-41f5-a49d-5fe5157b6dd5";
 
+	private it.vige.labs.gc.bean.votingpapers.VotingPapers votingPapers;
+
 	@Autowired
 	private VoteController voteController;
 
@@ -90,7 +93,7 @@ public class VoteTest {
 	}
 
 	@Test
-	@WithMockKeycloakAuth(authorities = { CITIZEN_ROLE }, oidc = @OidcStandardClaims(preferredUsername = DEFAULT_USER))
+	@WithMockKeycloakAuth(authorities = { ADMIN_ROLE }, oidc = @OidcStandardClaims(preferredUsername = DEFAULT_USER))
 	public void voteOk() throws Exception {
 
 		mockUsers("4-2523228-2523962-6542276");
@@ -118,6 +121,13 @@ public class VoteTest {
 		Vote vote = new Vote(asList(new VotingPaper[] { comunali, regionali, nazionali, europee }));
 		Messages messages = voteController.vote(vote);
 		logger.info(messages + "");
+		assertFalse(messages.isOk(), "the voting paper is expired");
+		votingPapers.getVotingPapers().forEach(e -> {
+			if (e.getId() == 121)
+				addDates(e, -1, 3);
+		});
+		voteController.resetVotingPapers();
+		messages = voteController.vote(vote);
 		assertArrayEquals(defaultMessage.getMessages().toArray(), messages.getMessages().toArray(), "the result is ok");
 		assertTrue(messages.isOk());
 
@@ -500,10 +510,12 @@ public class VoteTest {
 	private void mockVotingPapers() throws Exception {
 		ObjectMapper objectMapper = new ObjectMapper();
 		InputStream jsonStream = new FileInputStream("src/test/resources/mock/config-app.json");
-		it.vige.labs.gc.bean.votingpapers.VotingPapers votingPapers = objectMapper.readValue(jsonStream,
-				it.vige.labs.gc.bean.votingpapers.VotingPapers.class);
+		votingPapers = objectMapper.readValue(jsonStream, it.vige.labs.gc.bean.votingpapers.VotingPapers.class);
 		votingPapers.getVotingPapers().forEach(e -> {
-			addDates(e, -1, 3);
+			if (e.getId() != 121)
+				addDates(e, -1, 3);
+			else
+				addDates(e, -3, -2);
 		});
 		String url = newInstance().scheme(votingpapersScheme).host(votingpapersHost).port(votingpapersPort)
 				.path("/votingPapers?info&all").buildAndExpand().toString();

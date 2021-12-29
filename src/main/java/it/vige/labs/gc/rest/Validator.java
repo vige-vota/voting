@@ -72,6 +72,10 @@ public class Validator {
 		}
 		return votingPapers;
 	}
+	
+	public void setVotingPapers(VotingPapers votingPapers) {
+		this.votingPapers = votingPapers;
+	}
 
 	public void setRestTemplate(RestTemplate restTemplate) {
 		this.restTemplate = restTemplate;
