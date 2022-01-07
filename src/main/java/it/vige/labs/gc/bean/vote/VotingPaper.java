@@ -4,6 +4,7 @@ import static java.util.stream.Collectors.toList;
 
 import java.util.List;
 
+import it.vige.labs.gc.bean.votingpapers.VotingDate;
 import it.vige.labs.gc.bean.votingpapers.VotingPapers;
 import it.vige.labs.gc.users.User;
 
@@ -56,7 +57,9 @@ public class VotingPaper extends Validation {
 					.parallelStream().filter(e -> e.getId() == id).collect(toList()).get(0);
 			if (id == votingPaperFromJson.getId()) {
 				List<it.vige.labs.gc.bean.votingpapers.Group> groups = votingPaperFromJson.getGroups();
-				if (!user.hasZone(votingPaperFromJson) || !votingPaperFromJson.dateOk())
+				List<VotingDate> dates = votingPaperFromJson.getDates();
+				if (!user.hasZone(votingPaperFromJson) || dates == null
+						|| !dates.parallelStream().anyMatch(votingDate -> votingDate.dateOk()))
 					results[i] = false;
 				else {
 					if (groups != null) {

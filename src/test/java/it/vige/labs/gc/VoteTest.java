@@ -51,6 +51,7 @@ import it.vige.labs.gc.bean.vote.Group;
 import it.vige.labs.gc.bean.vote.Party;
 import it.vige.labs.gc.bean.vote.Vote;
 import it.vige.labs.gc.bean.vote.VotingPaper;
+import it.vige.labs.gc.bean.votingpapers.VotingDate;
 import it.vige.labs.gc.messages.Messages;
 import it.vige.labs.gc.rest.Validator;
 import it.vige.labs.gc.rest.VoteController;
@@ -495,9 +496,14 @@ public class VoteTest {
 	}
 
 	private void addDates(it.vige.labs.gc.bean.votingpapers.VotingPaper votingPaper, int startingDays, int endingDays) {
+		List<VotingDate> dates = votingPaper.getDates();
+		if (dates == null)
+			votingPaper.setDates(new ArrayList<VotingDate>());
 		Date startingDate = addDays(new Date(), startingDays);
-		votingPaper.setStartingDate(startingDate);
-		votingPaper.setEndingDate(addDays(startingDate, endingDays));
+		VotingDate votingDate = new VotingDate();
+		votingDate.setStartingDate(startingDate);
+		votingDate.setEndingDate(addDays(startingDate, endingDays));
+		votingPaper.getDates().add(votingDate);
 	}
 
 	private Date addDays(Date date, int days) {
