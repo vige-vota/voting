@@ -277,7 +277,6 @@ public class VoteTest {
 		vote.getVotingPapers().add(new VotingPaper(86));
 		vote.getVotingPapers().add(regionali);
 		vote.getVotingPapers().add(europee);
-
 		messages = voteController.vote(vote);
 		logger.info(messages + "");
 		assertArrayEquals(defaultMessage.getMessages().toArray(), messages.getMessages().toArray(),
