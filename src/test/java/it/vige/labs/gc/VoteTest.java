@@ -262,6 +262,11 @@ public class VoteTest {
 		nazionali.setParty(fratelliDItalia);
 		messages = voteController.vote(vote);
 		logger.info(messages + "");
+		assertArrayEquals(errorMessage.getMessages().toArray(), messages.getMessages().toArray(), "the user has voted");
+		mockUsers("4-2523228-2523962-6542276");
+
+		messages = voteController.vote(vote);
+		logger.info(messages + "");
 		assertArrayEquals(errorMessage.getMessages().toArray(), messages.getMessages().toArray(),
 				"a party without group is not ok if not disjointed");
 		assertFalse(messages.isOk());
@@ -272,6 +277,7 @@ public class VoteTest {
 		vote.getVotingPapers().add(new VotingPaper(86));
 		vote.getVotingPapers().add(regionali);
 		vote.getVotingPapers().add(europee);
+
 		messages = voteController.vote(vote);
 		logger.info(messages + "");
 		assertArrayEquals(defaultMessage.getMessages().toArray(), messages.getMessages().toArray(),
@@ -304,6 +310,11 @@ public class VoteTest {
 
 		Party pd = new Party(3);
 		comunali.setParty(pd);
+		messages = voteController.vote(vote);
+		logger.info(messages + "");
+		assertArrayEquals(errorMessage.getMessages().toArray(), messages.getMessages().toArray(), "the user has voted");
+		mockUsers("4-2523228-2523962-6542276");
+
 		messages = voteController.vote(vote);
 		logger.info(messages + "");
 		assertArrayEquals(defaultMessage.getMessages().toArray(), messages.getMessages().toArray(),
@@ -481,6 +492,11 @@ public class VoteTest {
 		Candidate paolaTaverna = new Candidate(31);
 		movimento5Stelle.getCandidates().add(giulianoSantoboni);
 		movimento5Stelle.getCandidates().add(paolaTaverna);
+		messages = voteController.vote(vote);
+		logger.info(messages + "");
+		assertArrayEquals(errorMessage.getMessages().toArray(), messages.getMessages().toArray(), "the user has voted");
+		mockUsers("4-2523228-2523962-6542276");
+
 		messages = voteController.vote(vote);
 		logger.info(messages + "");
 		assertArrayEquals(errorMessage.getMessages().toArray(), messages.getMessages().toArray(),

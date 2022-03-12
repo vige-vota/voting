@@ -59,7 +59,7 @@ public class VotingPaper extends Validation {
 				List<it.vige.labs.gc.bean.votingpapers.Group> groups = votingPaperFromJson.getGroups();
 				List<VotingDate> dates = votingPaperFromJson.getDates();
 				if (!user.hasZone(votingPaperFromJson) || dates == null
-						|| !dates.parallelStream().anyMatch(votingDate -> votingDate.dateOk()))
+						|| !dates.parallelStream().anyMatch(votingDate -> votingDate.dateOk(user)))
 					results[i] = false;
 				else {
 					if (groups != null) {

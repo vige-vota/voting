@@ -6,12 +6,16 @@ import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import it.vige.labs.gc.users.User;
+
 public class VotingDate {
 
-	@JsonFormat(shape = STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
+	public final static String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
+
+	@JsonFormat(shape = STRING, pattern = DATE_FORMAT)
 	private Date startingDate;
 
-	@JsonFormat(shape = STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
+	@JsonFormat(shape = STRING, pattern = DATE_FORMAT)
 	private Date endingDate;
 
 	public Date getStartingDate() {
@@ -30,10 +34,10 @@ public class VotingDate {
 		this.endingDate = endingDate;
 	}
 
-	public boolean dateOk() {
+	public boolean dateOk(User user) {
 		Date date = new Date();
 		return startingDate != null && endingDate != null && startingDate.compareTo(endingDate) < 0
-				&& endingDate.compareTo(date) > 0;
+				&& endingDate.compareTo(date) > 0 && !user.hasVoted(date);
 	}
 
 }

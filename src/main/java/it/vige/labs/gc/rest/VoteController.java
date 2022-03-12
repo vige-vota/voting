@@ -42,6 +42,7 @@ public class VoteController {
 		Messages messages = validator.validate(vote, user);
 		if (messages.isOk()) {
 			result.add(vote);
+			authorities.addStamp();
 			webSocketClient.getStompSession().send(TOPIC_NAME, getResult());
 		}
 		return messages;
