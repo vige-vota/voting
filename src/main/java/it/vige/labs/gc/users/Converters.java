@@ -33,16 +33,33 @@ public interface Converters {
 				List<String> zones = attributes.get("zones");
 				user.setZones(zones.get(0));
 				List<String> stamps = attributes.get("stamps");
-				if (stamps != null && !stamps.isEmpty())
-					user.setStamps(stamps.parallelStream().map(e -> {
-						Date date = null;
-						try {
-							date = dateFormat.parse(e);
-						} catch (ParseException e1) {
-							log.error(e1);
-						}
-						return date;
-					}).collect(toList()));
+				if (stamps != null && !stamps.isEmpty()) {
+					List<Date> dates = null;
+					try {
+						dates = stamps.parallelStream().map(e -> {
+							Date date = null;
+							try {
+								date = dateFormat.parse(e);
+							} catch (ParseException e1) {
+								log.error(e1);
+							}
+							return date;
+						}).collect(toList());
+					} catch (Exception ex) {
+						// It is done to resolve a testing bug on mac osx. Sometime parallelStream
+						// doesn't return the results
+						dates = stamps.stream().map(e -> {
+							Date date = null;
+							try {
+								date = dateFormat.parse(e);
+							} catch (ParseException e1) {
+								log.error(e1);
+							}
+							return date;
+						}).collect(toList());
+					}
+					user.setStamps(dates);
+				}
 			}
 
 			return user;
