@@ -3,7 +3,7 @@ package it.vige.labs.gc.users;
 import static java.util.Arrays.asList;
 import static org.jboss.logging.Logger.getLogger;
 import static org.springframework.http.HttpMethod.GET;
-import static org.springframework.http.HttpMethod.PUT;
+import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.security.core.context.SecurityContextHolder.getContext;
 import static org.springframework.web.util.UriComponentsBuilder.newInstance;
 
@@ -53,7 +53,7 @@ public class Authorities implements Serializable, Converters {
 		String id = authentication.getName();
 		UserRepresentation user = null;
 		try {
-			UriComponents uriComponents = newInstance().uri(getFindUserByIdURI(id)).buildAndExpand();
+			UriComponents uriComponents = newInstance().uri(getFindUserURI()).buildAndExpand();
 
 			ResponseEntity<UserRepresentation> response = restTemplate.exchange(uriComponents.toString(), GET, null,
 					UserRepresentation.class);
@@ -72,7 +72,7 @@ public class Authorities implements Serializable, Converters {
 		Authentication authentication = getContext().getAuthentication();
 		String id = authentication.getName();
 		try {
-			UriComponents uriComponents = newInstance().uri(getFindUserByIdURI(id)).buildAndExpand();
+			UriComponents uriComponents = newInstance().uri(getFindUserURI()).buildAndExpand();
 
 			ResponseEntity<UserRepresentation> response = restTemplate.exchange(uriComponents.toString(), GET, null,
 					UserRepresentation.class);
@@ -85,7 +85,7 @@ public class Authorities implements Serializable, Converters {
 			}
 			stamps.add(dateFormat.format(new Date()));
 			HttpEntity<UserRepresentation> request = new HttpEntity<>(userRepresentation);
-			restTemplate.exchange(uriComponents.toString(), PUT, request, UserRepresentation.class);
+			restTemplate.exchange(uriComponents.toString(), POST, request, UserRepresentation.class);
 		} catch (Exception e) {
 			String message = "Cannot find user by id " + id;
 			throw new ModuleException(message, e);
@@ -96,8 +96,8 @@ public class Authorities implements Serializable, Converters {
 		return usersURI;
 	}
 
-	public URI getFindUserByIdURI(String id) {
-		return usersURI.resolve(usersURI.getPath() + "/admin/realms/" + usersRealm + "/users" + "/" + id);
+	public URI getFindUserURI() {
+		return usersURI.resolve(usersURI.getPath() + "/realms/" + usersRealm + "/account");
 	}
 
 	public String getUsersRealm() {

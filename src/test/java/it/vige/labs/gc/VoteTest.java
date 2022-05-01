@@ -551,7 +551,7 @@ public class VoteTest {
 
 	private void mockUsers() {
 		user.setUsername(DEFAULT_USER);
-		when(restTemplate.exchange(authorities.getFindUserByIdURI(DEFAULT_USER).toString(), GET, null,
+		when(restTemplate.exchange(authorities.getFindUserURI().toString(), GET, null,
 				UserRepresentation.class)).thenReturn(new ResponseEntity<UserRepresentation>(user, OK));
 		authorities.setRestTemplate(restTemplate);
 		voteController.setAuthorities(authorities);
