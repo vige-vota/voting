@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '2.4.4'
+        springBootVersion = '2.5.13'
     }
     repositories {
         mavenCentral()
@@ -17,7 +17,7 @@ apply plugin: 'io.spring.dependency-management'
 
 group = 'it.vige'
 version = '1.1.0-SNAPSHOT'
-sourceCompatibility = 13
+sourceCompatibility = 18
 
 repositories {
     mavenCentral()
@@ -29,8 +29,8 @@ dependencies {
     implementation('org.springframework.boot:spring-boot-starter-security')
     implementation('io.springfox:springfox-boot-starter:3.0.0')
     implementation('org.apache.httpcomponents:httpclient')
-    implementation('org.keycloak:keycloak-spring-boot-starter:15.0.2')
-    implementation('com.c4-soft.springaddons:spring-security-oauth2-test-webmvc-addons:2.5.2')
+    implementation('org.keycloak:keycloak-spring-boot-starter:15.1.1')
+    implementation('com.c4-soft.springaddons:spring-addons-keycloak:4.1.9')
     testImplementation('org.springframework.boot:spring-boot-starter-test')
 }
 

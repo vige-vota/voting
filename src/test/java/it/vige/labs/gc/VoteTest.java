@@ -40,7 +40,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.client.RestTemplate;
 
-import com.c4_soft.springaddons.security.oauth2.test.annotations.OidcStandardClaims;
+import com.c4_soft.springaddons.security.oauth2.test.annotations.OpenIdClaims;
 import com.c4_soft.springaddons.security.oauth2.test.annotations.keycloak.WithMockKeycloakAuth;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -97,7 +97,7 @@ public class VoteTest {
 	}
 
 	@Test
-	@WithMockKeycloakAuth(authorities = { ADMIN_ROLE }, oidc = @OidcStandardClaims(preferredUsername = DEFAULT_USER))
+	@WithMockKeycloakAuth(authorities = { ADMIN_ROLE }, claims = @OpenIdClaims(preferredUsername = DEFAULT_USER))
 	public void voteOk() throws Exception {
 
 		changeZone("4-2523228-2523962-6542276");
@@ -212,7 +212,7 @@ public class VoteTest {
 	}
 
 	@Test
-	@WithMockKeycloakAuth(authorities = { CITIZEN_ROLE }, oidc = @OidcStandardClaims(preferredUsername = DEFAULT_USER))
+	@WithMockKeycloakAuth(authorities = { CITIZEN_ROLE }, claims = @OpenIdClaims(preferredUsername = DEFAULT_USER))
 	public void onlySelection() throws Exception {
 
 		changeZone("4-2523228-2523962-6542276");
@@ -352,7 +352,7 @@ public class VoteTest {
 	}
 
 	@Test
-	@WithMockKeycloakAuth(authorities = { CITIZEN_ROLE }, oidc = @OidcStandardClaims(preferredUsername = DEFAULT_USER))
+	@WithMockKeycloakAuth(authorities = { CITIZEN_ROLE }, claims = @OpenIdClaims(preferredUsername = DEFAULT_USER))
 	public void authorized() throws Exception {
 
 		changeZone("4-2523228-2523962-6542277");
@@ -375,7 +375,7 @@ public class VoteTest {
 	}
 
 	@Test
-	@WithMockKeycloakAuth(authorities = { CITIZEN_ROLE }, oidc = @OidcStandardClaims(preferredUsername = DEFAULT_USER))
+	@WithMockKeycloakAuth(authorities = { CITIZEN_ROLE }, claims = @OpenIdClaims(preferredUsername = DEFAULT_USER))
 	public void ids() throws Exception {
 
 		changeZone("-1");
@@ -401,7 +401,7 @@ public class VoteTest {
 	}
 
 	@Test
-	@WithMockKeycloakAuth(authorities = { CITIZEN_ROLE }, oidc = @OidcStandardClaims(preferredUsername = DEFAULT_USER))
+	@WithMockKeycloakAuth(authorities = { CITIZEN_ROLE }, claims = @OpenIdClaims(preferredUsername = DEFAULT_USER))
 	public void disjointed() throws Exception {
 
 		changeZone("-1");
@@ -418,7 +418,7 @@ public class VoteTest {
 	}
 
 	@Test
-	@WithMockKeycloakAuth(authorities = { CITIZEN_ROLE }, oidc = @OidcStandardClaims(preferredUsername = DEFAULT_USER))
+	@WithMockKeycloakAuth(authorities = { CITIZEN_ROLE }, claims = @OpenIdClaims(preferredUsername = DEFAULT_USER))
 	public void candidates() throws Exception {
 
 		changeZone("4-2523228-2523962-6542276");

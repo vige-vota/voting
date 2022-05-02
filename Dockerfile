@@ -10,7 +10,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM openjdk:13-jdk
+FROM openjdk:18-jdk
 EXPOSE 8080
 RUN yum -y update && \
 	yum -y install sudo && \
