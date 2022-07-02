@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '2.5.13'
+        springBootVersion = '2.7.1'
     }
     repositories {
         mavenCentral()
@@ -30,7 +30,7 @@ dependencies {
     implementation('io.springfox:springfox-boot-starter:3.0.0')
     implementation('org.apache.httpcomponents:httpclient')
     implementation('org.keycloak:keycloak-spring-boot-starter:15.1.1')
-    implementation('com.c4-soft.springaddons:spring-addons-keycloak:4.1.9')
+    implementation('com.c4-soft.springaddons:spring-addons-keycloak:4.4.8')
     testImplementation('org.springframework.boot:spring-boot-starter-test')
 }
 

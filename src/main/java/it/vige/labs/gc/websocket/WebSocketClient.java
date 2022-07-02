@@ -18,7 +18,7 @@ import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509KeyManager;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter;
