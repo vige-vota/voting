@@ -19,7 +19,7 @@ import it.vige.labs.gc.bean.vote.Vote;
 import it.vige.labs.gc.messages.Messages;
 import it.vige.labs.gc.users.Authorities;
 import it.vige.labs.gc.users.User;
-import it.vige.labs.gc.websocket.WebSocketClient;
+import it.vige.labs.gc.websocket.WebSocketVotingClient;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -28,7 +28,7 @@ public class VoteController {
 	private VotingPapers result = new VotingPapers();
 
 	@Autowired
-	private WebSocketClient webSocketClient;
+	private WebSocketVotingClient webSocketClient;
 
 	@Autowired
 	private Authorities authorities;

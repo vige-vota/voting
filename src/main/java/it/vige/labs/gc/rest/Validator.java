@@ -72,7 +72,7 @@ public class Validator {
 		}
 		return votingPapers;
 	}
-	
+
 	public void setVotingPapers(VotingPapers votingPapers) {
 		this.votingPapers = votingPapers;
 	}

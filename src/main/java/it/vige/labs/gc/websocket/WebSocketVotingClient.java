@@ -27,7 +27,7 @@ import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
 
 @Service
-public class WebSocketClient {
+public class WebSocketVotingClient {
 
 	private StandardWebSocketClient standardWebSocketClient = new StandardWebSocketClient();
 
