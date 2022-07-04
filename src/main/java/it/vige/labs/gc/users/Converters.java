@@ -7,12 +7,16 @@ import static org.jboss.logging.Logger.getLogger;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
 import org.jboss.logging.Logger;
+import org.keycloak.representations.account.UserProfileAttributeMetadata;
+import org.keycloak.representations.account.UserProfileMetadata;
 import org.keycloak.representations.idm.UserRepresentation;
 
 public interface Converters {
@@ -63,6 +67,42 @@ public interface Converters {
 			}
 
 			return user;
+		}
+	};
+
+	Function<UserRepresentation, org.keycloak.representations.account.UserRepresentation> UserRepresentationToAccount = new Function<UserRepresentation, org.keycloak.representations.account.UserRepresentation>() {
+
+		public org.keycloak.representations.account.UserRepresentation apply(UserRepresentation t) {
+			org.keycloak.representations.account.UserRepresentation account = new org.keycloak.representations.account.UserRepresentation();
+			account.setId(t.getId());
+			account.setUsername(t.getUsername());
+			account.setFirstName(t.getFirstName());
+			account.setLastName(t.getLastName());
+			account.setEmail(t.getEmail());
+			Boolean isEmailVerified = t.isEmailVerified();
+			if (isEmailVerified != null)
+				account.setEmailVerified(isEmailVerified);
+			account.setAttributes(t.getAttributes());
+			List<UserProfileAttributeMetadata> attributes = new ArrayList<UserProfileAttributeMetadata>();
+			UserProfileMetadata userProfileMetadata = new UserProfileMetadata(attributes);
+			account.setUserProfileMetadata(userProfileMetadata);
+			UserProfileAttributeMetadata firstName = new UserProfileAttributeMetadata("firstName", "${firstname}", true,
+					false, null, new HashMap<String, Map<String, Object>>());
+			userProfileMetadata.getAttributes().add(firstName);
+			UserProfileAttributeMetadata lasttName = new UserProfileAttributeMetadata("lastName", "${lastname}", true,
+					false, null, new HashMap<String, Map<String, Object>>());
+			userProfileMetadata.getAttributes().add(lasttName);
+			Map<String, Map<String, Object>> emailValidators = new HashMap<String, Map<String, Object>>();
+			Map<String, Object> emailValidatorParameters = new HashMap<String, Object>();
+			emailValidatorParameters.put("ignore.empty.value", true);
+			emailValidators.put("email", emailValidatorParameters);
+			UserProfileAttributeMetadata email = new UserProfileAttributeMetadata("email", "${email}", true, false,
+					null, emailValidators);
+			userProfileMetadata.getAttributes().add(email);
+			UserProfileAttributeMetadata username = new UserProfileAttributeMetadata("username", "${username}", true,
+					false, null, new HashMap<String, Map<String, Object>>());
+			userProfileMetadata.getAttributes().add(username);
+			return account;
 		}
 	};
 }

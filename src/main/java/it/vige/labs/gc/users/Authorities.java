@@ -84,7 +84,9 @@ public class Authorities implements Serializable, Converters {
 				userRepresentation.getAttributes().put("stamps", stamps);
 			}
 			stamps.add(dateFormat.format(new Date()));
-			HttpEntity<UserRepresentation> request = new HttpEntity<>(userRepresentation);
+			org.keycloak.representations.account.UserRepresentation account = UserRepresentationToAccount
+					.apply(userRepresentation);
+			HttpEntity<org.keycloak.representations.account.UserRepresentation> request = new HttpEntity<>(account);
 			restTemplate.exchange(uriComponents.toString(), POST, request, UserRepresentation.class);
 		} catch (Exception e) {
 			String message = "Cannot find user by id " + id;
