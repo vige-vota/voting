@@ -1,6 +1,5 @@
 package it.vige.labs.gc.bean.vote;
 
-import static it.vige.labs.gc.bean.votingpapers.Type.REFERENDUM;
 import static java.util.stream.Collectors.toList;
 
 import java.util.List;
@@ -64,19 +63,13 @@ public class VotingPaper extends Validation {
 					results[i] = false;
 				else {
 					if (groups != null) {
-						boolean isReferendum = votingPaperFromJson.getType().equals(REFERENDUM.asString());
 						List<it.vige.labs.gc.bean.votingpapers.Party> parties = groups.parallelStream()
 								.flatMap(e -> e.getParties().parallelStream()).collect(toList());
-						if (!isReferendum) {
-							if (group != null)
-								group.validate(i, results, groups, parties, votingPaperFromJson, party);
-							else if (!votingPaperFromJson.isDisjointed())
-								results[i] = false;
-							else if (validateExisting(parties, party, votingPaperFromJson.getMaxCandidates()))
-								results[i] = true;
-						} else if (group != null)
+						if (group != null)
+							group.validate(i, results, groups, parties, votingPaperFromJson, party);
+						else if (!votingPaperFromJson.isDisjointed())
 							results[i] = false;
-						else
+						else if (validateExisting(parties, party, votingPaperFromJson.getMaxCandidates()))
 							results[i] = true;
 					}
 

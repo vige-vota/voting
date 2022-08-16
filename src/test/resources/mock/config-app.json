@@ -3,7 +3,6 @@
 	"votingPapers": [
 		{
 			"id": 0,
-			"type": "bigger",
 			"disjointed": true,
 			"zone": 6542276,
 			"groups": [
@@ -49,7 +48,6 @@
 		},
 		{
 			"id": 11,
-			"type": "bigger-partygroup",
 			"disjointed": true,
 			"maxCandidates": 2,
 			"zone": 2523228,
@@ -358,7 +356,6 @@
 		},
 		{
 			"id": 86,
-			"type": "little",
 			"groups": [
 				{
 					"id": 87,
@@ -489,7 +486,6 @@
 		{
 			"id": 121,
 			"maxCandidates": 3,
-			"type": "little-nogroup",
 			"parties": [
 				{
 					"id": 123,
@@ -1395,23 +1391,6 @@
 						{
 							"id": 259,
 							"sex": "M"
-						}
-					]
-				}
-			]
-		},
-		{
-			"id": 260,
-			"type": "referendum",
-			"groups": [
-				{
-					"id": 363,
-					"parties": [
-						{
-							"id": 364
-						},
-						{
-							"id": 365
 						}
 					]
 				}
