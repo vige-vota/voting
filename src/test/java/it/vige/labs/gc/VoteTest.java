@@ -66,7 +66,7 @@ public class VoteTest {
 	private final static String DEFAULT_USER = "669d3be4-4a67-41f5-a49d-5fe5157b6dd5";
 
 	private it.vige.labs.gc.bean.votingpapers.VotingPapers votingPapers;
-	
+
 	private UserRepresentation user = new UserRepresentation();
 
 	@Autowired
@@ -121,8 +121,11 @@ public class VoteTest {
 		Party fratelliDitalia = new Party(127,
 				asList(new Candidate[] { giorgiaMeloni, francescoAcquaroli, ariannaAlessandrini }));
 		VotingPaper europee = new VotingPaper(121, fratelliDitalia);
+		
+		Party si = new Party(364);
+		VotingPaper popolari = new VotingPaper(260, si);
 
-		Vote vote = new Vote(asList(new VotingPaper[] { comunali, regionali, nazionali, europee }));
+		Vote vote = new Vote(asList(new VotingPaper[] { comunali, regionali, nazionali, europee, popolari }));
 		Messages messages = voteController.vote(vote);
 		logger.info(messages + "");
 		assertFalse(messages.isOk(), "the voting paper is expired");
@@ -131,6 +134,14 @@ public class VoteTest {
 				addDates(e, -1, 3);
 		});
 		voteController.resetVotingPapers();
+		
+
+		Group antiCorruzione = new Group(363);
+		popolari.setGroup(antiCorruzione);
+		messages = voteController.vote(vote);
+		assertFalse(messages.isOk(), "referendum cannot have a group to vote");
+		
+		popolari.setGroup(null);
 		messages = voteController.vote(vote);
 		assertArrayEquals(defaultMessage.getMessages().toArray(), messages.getMessages().toArray(), "the result is ok");
 		assertTrue(messages.isOk());
@@ -138,10 +149,10 @@ public class VoteTest {
 		VotingPapers votingPapers = voteController.getResult(new VoteRequest(vote, new VotingPapers())).getVotings()
 				.get(0);
 		assertTrue(votingPapers.getElectors() == 1);
-		assertTrue(votingPapers.getMapVotingPapers().size() == 4);
+		assertTrue(votingPapers.getMapVotingPapers().size() == 5);
 		assertTrue(votingPapers.getMapVotingPapers().values().stream().allMatch(e -> e.getElectors() == 1));
 		votingPapers.getMapVotingPapers().values().stream().forEach(e -> {
-			assertTrue(e.getId() == 0 || e.getId() == 11 || e.getId() == 86 || e.getId() == 121);
+			assertTrue(e.getId() == 0 || e.getId() == 11 || e.getId() == 86 || e.getId() == 121 || e.getId() == 260);
 			if (e.getId() == 0) {
 				assertTrue(e.getMapGroups().values().stream().filter(f -> f.getId() == 5).findFirst().get()
 						.getElectors() == 1);
@@ -208,6 +219,11 @@ public class VoteTest {
 						.allMatch(f -> f.getElectors() == 1));
 				assertEquals(0, e.getBlankPapers(), "no blank papers");
 			}
+			if (e.getId() == 260) {
+				assertTrue(e.getMapGroups().isEmpty());
+				assertTrue(e.getMapParties().values().stream().allMatch(g -> g.getId() == 364 && g.getElectors() == 1));
+				assertEquals(0, e.getBlankPapers(), "no blank papers");
+			}
 		});
 	}
 
@@ -221,15 +237,16 @@ public class VoteTest {
 		VotingPaper comunali = new VotingPaper(0);
 		VotingPaper regionali = new VotingPaper(11);
 		VotingPaper europee = new VotingPaper(121);
+		VotingPaper popolare = new VotingPaper(260);
 		VotingPaper wrong = new VotingPaper(121000);
 
 		Vote vote = new Vote(new ArrayList<VotingPaper>(
-				asList(new VotingPaper[] { nazionali, comunali, regionali, europee, wrong })));
+				asList(new VotingPaper[] { nazionali, comunali, regionali, europee, popolare, wrong })));
 		Messages messages = voteController.vote(vote);
 		logger.info(messages + "");
 		assertFalse(messages.isOk(), "we cannot send more voting papers then the exposed");
 
-		vote.getVotingPapers().remove(4);
+		vote.getVotingPapers().remove(5);
 		messages = voteController.vote(vote);
 		logger.info(messages + "");
 		assertArrayEquals(defaultMessage.getMessages().toArray(), messages.getMessages().toArray(),
@@ -239,10 +256,10 @@ public class VoteTest {
 		VotingPapers votingPapers = voteController.getResult(new VoteRequest(vote, new VotingPapers())).getVotings()
 				.get(0);
 		assertTrue(votingPapers.getElectors() == 1);
-		assertTrue(votingPapers.getMapVotingPapers().size() == 4);
+		assertTrue(votingPapers.getMapVotingPapers().size() == 5);
 		assertTrue(votingPapers.getMapVotingPapers().values().stream().allMatch(e -> e.getElectors() == 1));
-		assertTrue(votingPapers.getMapVotingPapers().values().stream()
-				.allMatch(e -> e.getId() == 0 || e.getId() == 86 || e.getId() == 11 || e.getId() == 121));
+		assertTrue(votingPapers.getMapVotingPapers().values().stream().allMatch(
+				e -> e.getId() == 0 || e.getId() == 86 || e.getId() == 11 || e.getId() == 121 || e.getId() == 260));
 		votingPapers.getMapVotingPapers().values().stream().forEach(e -> {
 			if (e.getId() == 86) {
 				assertTrue(e.getMapGroups().values().stream().filter(f -> f.getId() == 95).findFirst().get()
@@ -551,8 +568,8 @@ public class VoteTest {
 
 	private void mockUsers() {
 		user.setUsername(DEFAULT_USER);
-		when(restTemplate.exchange(authorities.getFindUserURI().toString(), GET, null,
-				UserRepresentation.class)).thenReturn(new ResponseEntity<UserRepresentation>(user, OK));
+		when(restTemplate.exchange(authorities.getFindUserURI().toString(), GET, null, UserRepresentation.class))
+				.thenReturn(new ResponseEntity<UserRepresentation>(user, OK));
 		authorities.setRestTemplate(restTemplate);
 		voteController.setAuthorities(authorities);
 	}

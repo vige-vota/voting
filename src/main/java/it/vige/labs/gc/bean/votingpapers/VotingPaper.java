@@ -8,6 +8,8 @@ public class VotingPaper extends Identifier {
 
 	private int maxCandidates;
 
+	private String type;
+
 	private boolean disjointed;
 
 	private String zone;
@@ -24,6 +26,14 @@ public class VotingPaper extends Identifier {
 
 	public void setMaxCandidates(int maxCandidates) {
 		this.maxCandidates = maxCandidates;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	public boolean isDisjointed() {
