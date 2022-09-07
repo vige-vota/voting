@@ -2,6 +2,7 @@ package it.vige.labs.gc.bean.result;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -35,11 +36,14 @@ public class Group extends Electors {
 		setElectors(getElectors() + 1);
 		if (votingPaper.getGroup() != null)
 			setId(votingPaper.getGroup().getId());
-		if (votingPaper.getParty() != null) {
-			if (!mapParties.containsKey(votingPaper.getParty().getId()))
-				mapParties.put(votingPaper.getParty().getId(), new Party(votingPaper.getParty()));
-			else
-				mapParties.get(votingPaper.getParty().getId()).add(votingPaper.getParty());
+		List<it.vige.labs.gc.bean.vote.Party> parties = votingPaper.getParties();
+		if (parties != null && !parties.isEmpty()) {
+			parties.forEach(party -> {
+				if (!mapParties.containsKey(party.getId()))
+					mapParties.put(party.getId(), new Party(party));
+				else
+					mapParties.get(party.getId()).add(party);
+			});
 		}
 	}
 

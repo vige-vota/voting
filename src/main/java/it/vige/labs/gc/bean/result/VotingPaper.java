@@ -2,6 +2,7 @@ package it.vige.labs.gc.bean.result;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -13,7 +14,7 @@ public class VotingPaper extends Electors {
 
 	@JsonIgnore
 	private Map<Integer, Party> mapParties = new HashMap<Integer, Party>();
-	
+
 	private int blankPapers;
 
 	public VotingPaper() {
@@ -67,15 +68,17 @@ public class VotingPaper extends Electors {
 			else
 				mapGroups.get(id).add(votingPaper);
 		}
-		it.vige.labs.gc.bean.vote.Party party = votingPaper.getParty();
-		if (party != null) {
-			int id = party.getId();
-			if (!mapParties.containsKey(id))
-				mapParties.put(id, new Party(party));
-			else
-				mapParties.get(id).add(party);
+		List<it.vige.labs.gc.bean.vote.Party> parties = votingPaper.getParties();
+		if (parties != null && !parties.isEmpty()) {
+			parties.forEach(party -> {
+				int id = party.getId();
+				if (!mapParties.containsKey(id))
+					mapParties.put(id, new Party(party));
+				else
+					mapParties.get(id).add(party);
+			});
 		}
-		if (group == null && party == null)
+		if (group == null && (parties == null || parties.isEmpty()))
 			blankPapers++;
 	}
 }

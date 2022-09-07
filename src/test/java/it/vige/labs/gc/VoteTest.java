@@ -103,27 +103,27 @@ public class VoteTest {
 		changeZone("4-2523228-2523962-6542276");
 		Party pd = new Party(3);
 		Group michelBarbet = new Group(5);
-		VotingPaper comunali = new VotingPaper(0, pd, michelBarbet);
+		VotingPaper comunali = new VotingPaper(0, asList(new Party[] { pd }), michelBarbet);
 
 		Candidate paolaTaverna = new Candidate(31);
 		Candidate matteoCastorino = new Candidate(32);
 		Party movimento5Stelle = new Party(28, asList(new Candidate[] { paolaTaverna, matteoCastorino }));
 		Group forzaItalia = new Group(12);
-		VotingPaper regionali = new VotingPaper(11, movimento5Stelle, forzaItalia);
+		VotingPaper regionali = new VotingPaper(11, asList(new Party[] { movimento5Stelle }), forzaItalia);
 
 		Party noiConSalvini = new Party(94);
 		Group matteoSalvini = new Group(93);
-		VotingPaper nazionali = new VotingPaper(86, noiConSalvini, matteoSalvini);
+		VotingPaper nazionali = new VotingPaper(86, asList(new Party[] { noiConSalvini }), matteoSalvini);
 
 		Candidate giorgiaMeloni = new Candidate(171);
 		Candidate francescoAcquaroli = new Candidate(172);
 		Candidate ariannaAlessandrini = new Candidate(173);
 		Party fratelliDitalia = new Party(127,
 				asList(new Candidate[] { giorgiaMeloni, francescoAcquaroli, ariannaAlessandrini }));
-		VotingPaper europee = new VotingPaper(121, fratelliDitalia);
-		
+		VotingPaper europee = new VotingPaper(121, asList(new Party[] { fratelliDitalia }));
+
 		Party si = new Party(364);
-		VotingPaper popolari = new VotingPaper(260, si);
+		VotingPaper popolari = new VotingPaper(260, new ArrayList<Party>(asList(new Party[] { si })));
 
 		Vote vote = new Vote(asList(new VotingPaper[] { comunali, regionali, nazionali, europee, popolari }));
 		Messages messages = voteController.vote(vote);
@@ -134,14 +134,21 @@ public class VoteTest {
 				addDates(e, -1, 3);
 		});
 		voteController.resetVotingPapers();
-		
 
 		Group antiCorruzione = new Group(363);
 		popolari.setGroup(antiCorruzione);
 		messages = voteController.vote(vote);
 		assertFalse(messages.isOk(), "referendum cannot have a group to vote");
-		
+
 		popolari.setGroup(null);
+		popolari.getParties().add(new Party(366));
+		popolari.getParties().add(new Party(369));
+		Party wrongParty = new Party(243);
+		popolari.getParties().add(wrongParty);
+		messages = voteController.vote(vote);
+		assertFalse(messages.isOk(), "we cannot add a party from a different group");
+		
+		popolari.getParties().remove(wrongParty);
 		messages = voteController.vote(vote);
 		assertArrayEquals(defaultMessage.getMessages().toArray(), messages.getMessages().toArray(), "the result is ok");
 		assertTrue(messages.isOk());
@@ -221,7 +228,10 @@ public class VoteTest {
 			}
 			if (e.getId() == 260) {
 				assertTrue(e.getMapGroups().isEmpty());
-				assertTrue(e.getMapParties().values().stream().allMatch(g -> g.getId() == 364 && g.getElectors() == 1));
+				assertTrue(e.getMapParties().values().stream().allMatch(g -> g.getElectors() == 1));
+				assertTrue(e.getMapParties().values().stream().anyMatch(g -> g.getId() == 364));
+				assertTrue(e.getMapParties().values().stream().anyMatch(g -> g.getId() == 366));
+				assertTrue(e.getMapParties().values().stream().anyMatch(g -> g.getId() == 369));
 				assertEquals(0, e.getBlankPapers(), "no blank papers");
 			}
 		});
@@ -279,7 +289,7 @@ public class VoteTest {
 		assertTrue(messages.isOk());
 
 		Party fratelliDItalia = new Party(96);
-		nazionali.setParty(fratelliDItalia);
+		nazionali.setParties(asList(new Party[] { fratelliDItalia }));
 		messages = voteController.vote(vote);
 		logger.info(messages + "");
 		assertArrayEquals(errorMessage.getMessages().toArray(), messages.getMessages().toArray(), "the user has voted");
@@ -328,7 +338,7 @@ public class VoteTest {
 		assertTrue(messages.isOk());
 
 		Party pd = new Party(3);
-		comunali.setParty(pd);
+		comunali.setParties(asList(new Party[] { pd }));
 		messages = voteController.vote(vote);
 		logger.info(messages + "");
 		assertArrayEquals(errorMessage.getMessages().toArray(), messages.getMessages().toArray(), "the user has voted");
@@ -398,7 +408,7 @@ public class VoteTest {
 		changeZone("-1");
 		Party giorgiaMeloni = new Party(93);
 		Group matteoSalvini = new Group(95);
-		VotingPaper nazionali = new VotingPaper(86, giorgiaMeloni, matteoSalvini);
+		VotingPaper nazionali = new VotingPaper(86, asList(new Party[] { giorgiaMeloni }), matteoSalvini);
 
 		Vote vote = new Vote(asList(new VotingPaper[] { nazionali }));
 		Messages messages = voteController.vote(vote);
@@ -409,7 +419,7 @@ public class VoteTest {
 
 		Party noiConSalvini = new Party(94);
 		matteoSalvini.setId(1122);
-		nazionali.setParty(noiConSalvini);
+		nazionali.setParties(asList(new Party[] { noiConSalvini }));
 		messages = voteController.vote(vote);
 		logger.info(messages + "");
 		assertArrayEquals(errorMessage.getMessages().toArray(), messages.getMessages().toArray(),
@@ -424,7 +434,7 @@ public class VoteTest {
 		changeZone("-1");
 		Party giorgiaMeloni = new Party(95);
 		Group matteoSalvini = new Group(93);
-		VotingPaper nazionali = new VotingPaper(86, giorgiaMeloni, matteoSalvini);
+		VotingPaper nazionali = new VotingPaper(86, asList(new Party[] { giorgiaMeloni }), matteoSalvini);
 
 		Vote vote = new Vote(asList(new VotingPaper[] { nazionali }));
 		Messages messages = voteController.vote(vote);
@@ -450,7 +460,7 @@ public class VoteTest {
 				new ArrayList<Candidate>(asList(new Candidate[] { giulianoSantoboni, matteoCastorino })));
 		Group forzaItalia = new Group(12);
 		regionali.setGroup(forzaItalia);
-		regionali.setParty(movimento5Stelle);
+		regionali.setParties(asList(new Party[] { movimento5Stelle }));
 
 		Vote vote = new Vote(new ArrayList<VotingPaper>(asList(new VotingPaper[] { regionali })));
 		Messages messages = voteController.vote(vote);
