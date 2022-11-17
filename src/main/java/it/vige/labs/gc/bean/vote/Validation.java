@@ -12,10 +12,10 @@ public class Validation extends Identifier {
 		super(id);
 	}
 
-	public boolean validateExisting(List<it.vige.labs.gc.bean.votingpapers.Party> parties, Party party,
+	public boolean validateExisting(List<it.vige.labs.gc.bean.votingpapers.Party> parties, List<Party> partiesVote,
 			int maxCandidates) {
-		if (party != null)
-			return party.validate(parties, maxCandidates);
+		if (partiesVote != null && !partiesVote.isEmpty())
+			return partiesVote.parallelStream().allMatch(party -> party.validate(parties, maxCandidates));
 		else
 			return true;
 	}
