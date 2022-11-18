@@ -3,6 +3,7 @@ package it.vige.labs.gc.websocket;
 import static it.vige.labs.gc.JavaAppApplication.BROKER_V_NAME;
 import static it.vige.labs.gc.JavaAppApplication.TOPIC_V_NAME;
 import static java.security.KeyStore.getInstance;
+import static javax.websocket.ContainerProvider.getWebSocketContainer;
 import static org.apache.tomcat.websocket.Constants.SSL_CONTEXT_PROPERTY;
 
 import java.io.FileInputStream;
@@ -19,7 +20,6 @@ import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509KeyManager;
-import javax.websocket.ContainerProvider;
 import javax.websocket.WebSocketContainer;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,14 +38,14 @@ import it.vige.labs.gc.rest.Validator;
 @Service
 public class WebSocketVotingPapersClient {
 
-	private WebSocketContainer webSocketContainer = ContainerProvider.getWebSocketContainer();
+	private WebSocketContainer webSocketContainer = getWebSocketContainer();
 
 	private StandardWebSocketClient standardWebSocketClient = new StandardWebSocketClient(webSocketContainer);
 
 	private WebSocketStompClient stompClient = new WebSocketStompClient(standardWebSocketClient);
 
 	private StompSession stompSession;
-	
+
 	@Autowired
 	private Validator validator;
 
@@ -90,16 +90,20 @@ public class WebSocketVotingPapersClient {
 			public Type getPayloadType(StompHeaders headers) {
 				return VotingPapers.class;
 			}
-			
+
 			@Override
 			public void handleFrame(StompHeaders headers, Object payload) {
-				validator.setVotingPapers((VotingPapers)payload);
+				validator.setVotingPapers((VotingPapers) payload);
 			}
 
 		};
-		stompSession = stompClient.connect(websocketScheme + "://" + serverHost + ":" + serverPort + BROKER_V_NAME,
-				stompSessionHandlerAdapter).get();
-		stompSession.subscribe(TOPIC_V_NAME, stompSessionHandlerAdapter);
+		try {
+			stompSession = stompClient.connect(websocketScheme + "://" + serverHost + ":" + serverPort + BROKER_V_NAME,
+					stompSessionHandlerAdapter).get();
+			stompSession.subscribe(TOPIC_V_NAME, stompSessionHandlerAdapter);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 	}
 
 	public StompSession getStompSession() throws Exception {
