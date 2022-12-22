@@ -10,7 +10,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM arm64v8/eclipse-temurin:18-jdk
+FROM arm64v8/eclipse-temurin:19-jdk
 EXPOSE 8080
 RUN apt-get -y update && \
 	apt-get -y install sudo && \
@@ -34,5 +34,5 @@ RUN rm -Rf /home/votinguser/.gradle && \
 	mv /workspace/vota/build/libs/voting-*.jar /workspace/vota.jar && \
 	rm -Rf /workspace/vota
 
-CMD java -jar /workspace/vota.jar --server.port=8080 --spring.profiles.active=docker && \
+CMD java -jar /workspace/vota.jar --server.port=8080 --spring.profiles.active=dev && \
 	tail -f /dev/null
