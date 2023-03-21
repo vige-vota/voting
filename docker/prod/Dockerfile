@@ -35,5 +35,5 @@ RUN rm -Rf /home/votinguser/.gradle && \
 	mv /workspace/vota/docker/prod/volume/cert/application.keystore /workspace/application.keystore && \
 	rm -Rf /workspace/vota
 
-CMD java -Djavax.net.ssl.trustStore=/workspace/application.keystore -jar /workspace/vota.jar --server.port=8443 --spring.profiles.active=prod --server.ssl.key-store=/workspace/application.keystore --server.ssl.key-store-password=password --server.ssl.trust-store=./application.keystore --server.ssl.trust-store-password=password && \
+CMD java -Djavax.net.ssl.trustStore=/workspace/application.keystore -Djavax.net.ssl.trustStorePassword=password -jar /workspace/vota.jar --server.port=8443 --spring.profiles.active=prod --server.ssl.key-store=/workspace/application.keystore --server.ssl.key-store-password=password --server.ssl.trust-store=./application.keystore --server.ssl.trust-store-password=password && \
 	tail -f /dev/null
