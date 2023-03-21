@@ -7,13 +7,13 @@ To build the application run the command inside the voting folder
 ```
 Start the Java application with the following commands:
 ```
-java -jar build/libs/voting-1.1.1-SNAPSHOT.jar --server.port=8080 --spring.profiles.active=dev
+java -jar build/libs/voting-1.1.1.jar --server.port=8080 --spring.profiles.active=dev
 ```
 and open [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html) in your browser to connect to the vote application.
 
 If you need to start it on a environment production:
 ```
-java -Djavax.net.ssl.trustStore=./docker/prod/volume/cert/application.keystore -Djavax.net.ssl.trustStorePassword=password -jar build/libs/voting-1.1.1-SNAPSHOT.jar --server.ssl.key-store=./docker/prod/volume/cert/application.keystore --server.ssl.key-store-password=password --server.ssl.trust-store=./docker/prod/volume/cert/application.keystore --server.ssl.trust-store-password=password --server.port=8443 --spring.profiles.active=prod
+java -Djavax.net.ssl.trustStore=./docker/prod/volume/cert/application.keystore -Djavax.net.ssl.trustStorePassword=password -jar build/libs/voting-1.1.1.jar --server.ssl.key-store=./docker/prod/volume/cert/application.keystore --server.ssl.key-store-password=password --server.ssl.trust-store=./docker/prod/volume/cert/application.keystore --server.ssl.trust-store-password=password --server.port=8443 --spring.profiles.active=prod
 ```
 
 Add the following DNS in your /etc/hosts file:
