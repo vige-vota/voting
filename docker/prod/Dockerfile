@@ -24,16 +24,18 @@ RUN apt-get -y update && \
 USER votinguser
 
 ENV TERM xterm
+VOLUME /workspace/cert
 
 WORKDIR /workspace
 COPY / /workspace/vota
 RUN sudo chown -R votinguser:votinguser /workspace
-RUN cd vota && ./gradlew build -x test
+RUN cd vota && ./gradlew build -x test && \
+	mkdir /workspace/cert
 RUN rm -Rf /home/votinguser/.gradle && \
 	rm /workspace/vota/build/libs/voting-*-plain.jar && \
 	mv /workspace/vota/build/libs/voting-*.jar /workspace/vota.jar && \
-	mv /workspace/vota/docker/prod/volume/cert/application.keystore /workspace/application.keystore && \
+	mv /workspace/vota/docker/prod/volume/cert/application.keystore /workspace/cert/application.keystore && \
 	rm -Rf /workspace/vota
 
-CMD java -Djavax.net.ssl.trustStore=/workspace/application.keystore -Djavax.net.ssl.trustStorePassword=password -jar /workspace/vota.jar --server.port=8443 --spring.profiles.active=prod --server.ssl.key-store=/workspace/application.keystore --server.ssl.key-store-password=password --server.ssl.trust-store=./application.keystore --server.ssl.trust-store-password=password && \
+CMD java -Djavax.net.ssl.trustStore=/workspace/cert/application.keystore -Djavax.net.ssl.trustStorePassword=password -jar /workspace/vota.jar --server.port=8443 --spring.profiles.active=prod --server.ssl.key-store=/workspace/cert/application.keystore --server.ssl.key-store-password=password --server.ssl.trust-store=/workspace/cert/application.keystore --server.ssl.trust-store-password=password && \
 	tail -f /dev/null
