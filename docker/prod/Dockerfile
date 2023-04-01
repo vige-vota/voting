@@ -24,6 +24,7 @@ RUN apt-get -y update && \
 USER votinguser
 
 ENV TERM xterm
+ENV PASSWORD_STORE password
 VOLUME /workspace/cert
 
 WORKDIR /workspace
@@ -37,5 +38,5 @@ RUN rm -Rf /home/votinguser/.gradle && \
 	mv /workspace/vota/docker/prod/volume/cert/application.keystore /workspace/cert/application.keystore && \
 	rm -Rf /workspace/vota
 
-CMD java -Djavax.net.ssl.trustStore=/workspace/cert/application.keystore -Djavax.net.ssl.trustStorePassword=password -jar /workspace/vota.jar --server.port=8443 --spring.profiles.active=prod --server.ssl.key-store=/workspace/cert/application.keystore --server.ssl.key-store-password=password --server.ssl.trust-store=/workspace/cert/application.keystore --server.ssl.trust-store-password=password && \
+CMD java -Djavax.net.ssl.trustStore=/workspace/cert/application.keystore -Djavax.net.ssl.trustStorePassword=$PASSWORD_STORE -jar /workspace/vota.jar --server.port=8443 --spring.profiles.active=prod --server.ssl.key-store=/workspace/cert/application.keystore --server.ssl.key-store-password=$PASSWORD_STORE --server.ssl.trust-store=/workspace/cert/application.keystore --server.ssl.trust-store-password=$PASSWORD_STORE && \
 	tail -f /dev/null
