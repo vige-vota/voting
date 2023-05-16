@@ -10,7 +10,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM arm64v8/eclipse-temurin:19-jdk
+FROM arm64v8/eclipse-temurin:20-jdk
 EXPOSE 8080
 RUN apt-get -y update && \
 	apt-get -y install sudo && \
